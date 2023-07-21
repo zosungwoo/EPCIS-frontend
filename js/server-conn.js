@@ -5,6 +5,7 @@ let baseURL = hrefArr[0] + "//" + hrefArr[2] + "/epcis";
 let baseURLs = {};
 
 $(document).ready(() => {
+  // Connection to the server
   $.ajax({
     url: baseURL + "/stats",
     crossOrigin: true,
