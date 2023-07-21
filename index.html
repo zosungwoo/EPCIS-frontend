@@ -3,25 +3,15 @@
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
 
-    <title>Oliot EPCIS X</title>
+    <title>Oliot EPCIS</title>
 
     <!-- Custom fonts for this template-->
-    <link
-      href="vendor/fontawesome-free/css/all.min.css"
-      rel="stylesheet"
-      type="text/css"
-    />
-    <link
-      href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-      rel="stylesheet"
-    />
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet" />
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet" />
     <script defer src="js/server-conn.js"></script>
@@ -31,31 +21,14 @@
     <!-- Page Wrapper -->
     <div id="wrapper">
       <!-- Sidebar -->
-      <ul
-        class="navbar-nav bg-gradient-custom sidebar sidebar-dark accordion"
-        id="accordionSidebar"
-      >
+      <ul class="navbar-nav bg-gradient-custom sidebar sidebar-dark accordion" id="accordionSidebar">
         <!-- Sidebar - Brand -->
-        <a
-          class="sidebar-brand d-flex align-items-center justify-content-center"
-          href="index.html"
-        >
+        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
           <div class="sidebar-brand-icon">
             <i class="fab fa-opera"></i>
           </div>
-          <div class="sidebar-brand-text mx-3">Oliot EPCIS X</div>
+          <div class="sidebar-brand-text mx-3">Oliot EPCIS</div>
         </a>
-
-        <!-- Divider -->
-        <hr class="sidebar-divider" />
-
-        <li class="nav-item">
-          <!-- active"> -->
-          <a class="nav-link pt-0" href="index.html">
-            <i class="fas fa-fw fa-info-circle"></i>
-            <span>About</span>
-          </a>
-        </li>
 
         <!-- Divider -->
         <hr class="sidebar-divider" />
@@ -66,8 +39,7 @@
         <div class="sidebar-heading">XML</div>
 
         <li class="nav-item">
-          <!-- active"> -->
-          <a class="nav-link" href="index.html">
+          <a class="nav-link" href="xmlCapture.html">
             <span>XML Capture Client</span>
           </a>
         </li>
@@ -96,71 +68,6 @@
           </a>
         </li>
 
-        <!-- Divider -->
-        <hr class="sidebar-divider" />
-
-        <br />
-
-        <!-- Divider -->
-        <hr class="sidebar-divider" />
-
-        <!-- Version 2-->
-
-        <!-- Nav Item - Collapse Menu -->
-        <li class="nav-item">
-          <a
-            class="nav-link collapsed"
-            href="#"
-            data-toggle="collapse"
-            data-target="#collapseXML"
-            aria-expanded="true"
-            aria-controls="collapseXML"
-          >
-            <span>XML</span>
-          </a>
-
-          <div
-            id="collapseXML"
-            class="collapse"
-            aria-labelledby="headingXML"
-            data-parent="#accordionSidebar"
-          >
-            <div class="bg-white py-2 collapse-inner rounded">
-              <a class="collapse-item" href="index.html">XML Capture Client</a>
-              <a class="collapse-item" href="index.html">
-                XML Capture Cleint <br />
-                (single)
-              </a>
-            </div>
-          </div>
-        </li>
-
-        <li class="nav-item">
-          <a
-            class="nav-link collapsed"
-            href="#"
-            data-toggle="collapse"
-            data-target="#collapseSOAP"
-            aria-expanded="true"
-            aria-controls="collapseSOAP"
-          >
-            <span>SOAP</span>
-          </a>
-
-          <div
-            id="collapseSOAP"
-            class="collapse"
-            aria-labelledby="headingSOAP"
-            data-parent="#accordionSidebar"
-          >
-            <div class="bg-white py-2 collapse-inner rounded">
-              <a class="collapse-item" href="index.html">SOAP Query Client</a>
-              <a class="collapse-item" href="index.html"
-                >SOAP Subscription Client</a
-              >
-            </div>
-          </div>
-        </li>
 
         <!-- Divider -->
         <hr class="sidebar-divider d-none d-md-block" />
@@ -178,212 +85,286 @@
           <div class="bg-header pt-4 pb-10">
             <div class="pt-4 px-5">
               <h1 class="h1 text-gray-100 font-weight-bold mb-4">
-                Welcome to Oliot EPCIS X
+                Welcome to Oliot EPCIS
               </h1>
+
               <div class="text-gray-100">
                 <p>
-                  Oliot EPCIS X is a prototype implementation of Electronic
-                  Product Code Information Service (EPCIS) v2.0, enabling to
-                  capture and share standardized event/master data ratified by
-                  GS1.
+                  Oliot EPCIS 2.0 is a prototype implementation of Electronic Product Code Information Service (EPCIS) v2.0, enabling to capture and share standardized event/master data ratified by GS1.
                 </p>
               </div>
             </div>
+
+            <!-- Toast container -->
+            <div style="position: absolute; top: 1rem; right: 1rem;">
+              <!-- Toast -->
+              <div class="toast" id="responseToast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="3000">
+                <div class="toast-header">
+                  <i data-feather="bell"></i>
+                  <strong class="mr-auto">Reset Response</strong>
+                  <button class="ml-5 mb-1 close" type="button" data-dismiss="toast" aria-label="Close">
+                    &times;
+                  </button>
+                </div>
+                <div class="toast-body"></div>
+              </div>
+            </div>
           </div>
-          <div class="container-fluid mt-n8 px-5">
-            <div class="row">
-              <div class="col-lg-6">
-                <div class="card shadow mb-4">
-                  <div class="card-header">
-                    <h6 class="m-0 font-weight-bold text-custom text-lg">
-                      <i class="fas fa-database"></i>
-                      Repository Status
-                    </h6>
-                  </div>
-                  <div class="card-body">
-                    <div class="row mb-5">
-                      <div class="col-6">
-                        <div class="card border-left-primary shadow h-100 py-2">
-                          <div class="card-body">
-                            <div class="row no-gutters align-items-center">
-                              <div class="col mr-2">
-                                <div
-                                  class="text-m font-weight-bold text-primary text-uppercase mb-1"
-                                >
-                                  Event
-                                </div>
-                                <div
-                                  class="h2 mb-0 font-weight-bold text-gray-800"
-                                >
-                                  4
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
+          <div class="row mt-n8 px-5">
+            <div class="col-lg-8">
+              <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                  <h6 class="m-0 font-weight-bold text-custom text-lg">
+                    <i class="fas fa-fw fa-info-circle"></i>
+                    About
+                  </h6>
+                </div>
+                <div class="card-body">
+                  <p>
+                    This tutorial page provides the general information on Oliot EPCIS, and provides educational clients to understand GS1 EPCIS standard and test your own standard documents. Please use issue tab on GitHub or contact J.
+                    Byun for any issues, comments, errors, feedbacks, collaboration, contribution, etc. Currently a server on DFPL at Sejong University is available for free.
+                  </p>
+                  <p class="mb-0">
+                    <em>Note: for analytical usage, your access log could be collected.</em>
+                  </p>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col">
+                  <div class="card shadow mb-4">
+                    <div class="card-header">
+                      <h6 class="m-0 font-weight-bold text-custom">
+                        Specification
+                      </h6>
+                    </div>
+                    <div class="list-group list-group-flush">
+                      <div class="list-group-item">
+                        org.oliot.epcis.core-v2.1.0
                       </div>
-                      <div class="col-6">
-                        <div class="card border-left-success shadow h-100 py-2">
-                          <div class="card-body">
-                            <div class="row no-gutters align-items-center">
-                              <div class="col mr-2">
-                                <div
-                                  class="text-m font-weight-bold text-success text-uppercase mb-1"
-                                >
-                                  Vocabulary
-                                </div>
-                                <div
-                                  class="h2 mb-0 font-weight-bold text-gray-800"
-                                >
-                                  1
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
+                      <div class="list-group-item">
+                        Java Web Service
+                      </div>
+                      <div class="list-group-item">
+                        Open JDK 17
+                      </div>
+                      <div class="list-group-item">
+                        Eclipse Vert.x v4.3.1
+                      </div>
+                      <div class="list-group-item">
+                        MongoDB v5.0.9
                       </div>
                     </div>
-                    <div class="row ml-auto">
-                      <a href="#" class="btn btn-danger btn-icon-split ml-auto">
-                        <span class="icon text-white-50">
-                          <i class="fas fa-sync-alt"></i>
-                        </span>
-                        <span class="text">Reset</span>
-                      </a>
+                  </div>
+                  <div class="card shadow mb-4">
+                    <div class="card-header">
+                      <h6 class="m-0 font-weight-bold text-custom">
+                        Key Feature
+                      </h6>
+                    </div>
+                    <div class="list-group list-group-flush">
+                      <div class="list-group-item">
+                        GS1 EPCIS v2.0 compliance
+                      </div>
+                      <div class="list-group-item">
+                        Asynchronous
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="card shadow mb-4">
+                    <div class="card-header">
+                      <h6 class="m-0 font-weight-bold text-custom">
+                        Current Status
+                      </h6>
+                    </div>
+                    <div class="list-group list-group-flush small line-height" style="line-height: 1em;">
+                      <div class="list-group-item">
+                        XML Capture
+                      </div>
+                      <div class="list-group-item">
+                        JSON Capture
+                      </div>
+                      <div class="list-group-item">
+                        SOAP/HTTP Query
+                      </div>
+                      <div class="list-group-item">
+                        Hashed Event ID supported
+                      </div>
+                      <div class="list-group-item">
+                        CBV for EPCClass and Location supported
+                      </div>
+                      <div class="list-group-item">
+                        CBV-compliant XML Capture
+                      </div>
+                      <div class="list-group-item">
+                        REST/HTTP Event Query base and pagination
+                      </div>
+                      <div class="list-group-item">
+                        REST/HTTP GS1 Digital Link Master Data Query
+                      </div>
+                      <div class="list-group-item">
+                        JSON-formatted result for REST/HTTP Event Query
+                      </div>
+                      <div class="list-group-item">
+                        REST/HTTP Event Subscription via WebSockets
+                      </div>
+                      <div class="list-group-item">
+                        Nutrition Facts Available: 391 products
+                      </div>
+                      <div class="list-group-item">
+                        XML Single Event Capture
+                      </div>
+                      <div class="list-group-item">
+                        Transaction Supported with Capture Job
+                      </div>
+                      <div class="list-group-item">
+                        Type support for JSON extension fields
+                      </div>
+                      <div class="list-group-item">
+                        HTTP.GET /capture supported
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="col-lg-6 mb-4">
-                <div class="card shadow mb-4">
-                  <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-custom text-lg">
-                      <i class="fas fa-server"></i>
-                      Server Connections
-                    </h6>
+            </div>
+
+            <div class="col-lg-4">
+              <div class="card shadow mb-4">
+                <div class="card-header">
+                  <h6 class="m-0 font-weight-bold text-custom text-lg">
+                    <i class="fas fa-database"></i>
+                    Repository Status
+                  </h6>
+                </div>
+                <div class="card-body">
+                  <div class="row mb-4">
+                    <div class="col">
+                      <div class="card border-left-primary shadow h-100 py-2">
+                        <div class="card-body">
+                          <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                              <div class="text-m font-weight-bold text-primary text-uppercase mb-1">
+                                Event
+                              </div>
+                              <div id="eventsCount" class="h2 mb-0 font-weight-bold text-gray-800">
+                                -
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="card border-left-success shadow h-100 py-2">
+                        <div class="card-body">
+                          <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                              <div class="text-m font-weight-bold text-success text-uppercase mb-1">
+                                Vocabulary
+                              </div>
+                              <div id="vocabularyCount" class="h2 mb-0 font-weight-bold text-gray-800">
+                                -
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <div class="card-body text-gray-800">
-                    <div
-                      class="d-flex align-items-center justify-content-between px-4"
-                    >
-                      <div class="d-flex align-items-center">
-                        <div class="ms-4">
-                          <div class="small">XML Capture Server</div>
-                          <div class="text-xs text-muted">
-                            http://dfpl.sejong.ac.kr:8080/epcis/capture
-                          </div>
-                        </div>
-                      </div>
-                      <div class="ms-4 small">
-                        <div
-                          class="bg-success rounded-circle"
-                          style="width: 15px; height: 15px"
-                        ></div>
+                  <div class="row ml-auto">
+                    <a href="javascript:void(0);" onclick="resetDB();" class="btn btn-danger btn-icon-split ml-auto">
+                      <span class="icon text-white-50">
+                        <i class="fas fa-sync-alt"></i>
+                      </span>
+                      <span class="text">Reset</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                  <h6 class="m-0 font-weight-bold text-custom text-lg">
+                    <i class="fas fa-server"></i>
+                    Server Connections
+                  </h6>
+                </div>
+                <div class="card-body">
+                  <div class="d-flex align-items-center justify-content-between px-4">
+                    <div class="d-flex align-items-center">
+                      <div class="ms-4">
+                        <div class="small">XML Capture Server</div>
+                        <div id="xmlCaptureEndpoint" class="text-xs text-muted"></div>
                       </div>
                     </div>
-                    <hr />
+                    <div class="ms-4 small">
+                      <div id="xmlCaptureResp" class="rounded-circle" style="width: 15px; height: 15px;"></div>
+                    </div>
+                  </div>
+                  <hr />
 
-                    <div
-                      class="d-flex align-items-center justify-content-between px-4"
-                    >
-                      <div class="d-flex align-items-center">
-                        <div class="ms-4">
-                          <div class="small">SOAP Query Server</div>
-                          <div class="text-xs text-muted">
-                            http://dfpl.sejong.ac.kr:8081/epcis/query
-                          </div>
-                        </div>
-                      </div>
-                      <div class="ms-4 small">
-                        <div
-                          class="bg-success rounded-circle"
-                          style="width: 15px; height: 15px"
-                        ></div>
+                  <div class="d-flex align-items-center justify-content-between px-4">
+                    <div class="d-flex align-items-center">
+                      <div class="ms-4">
+                        <div class="small">SOAP Query Server</div>
+                        <div id="soapQueryEndpoint" class="text-xs text-muted"></div>
                       </div>
                     </div>
-                    <hr />
+                    <div class="ms-4 small">
+                      <div id="soapQueryResp" class="rounded-circle" style="width: 15px; height: 15px;"></div>
+                    </div>
+                  </div>
+                  <hr />
 
-                    <div
-                      class="d-flex align-items-center justify-content-between px-4"
-                    >
-                      <div class="d-flex align-items-center">
-                        <div class="ms-4">
-                          <div class="small">SOAP Subscribe Server</div>
-                          <div class="text-xs text-muted">
-                            http://dfpl.sejong.ac.kr:8082/epcis/query
-                          </div>
-                        </div>
-                      </div>
-                      <div class="ms-4 small">
-                        <div
-                          class="bg-success rounded-circle"
-                          style="width: 15px; height: 15px"
-                        ></div>
+                  <div class="d-flex align-items-center justify-content-between px-4">
+                    <div class="d-flex align-items-center">
+                      <div class="ms-4">
+                        <div class="small">SOAP Subscribe Server</div>
+                        <div id="soapSubscribeEndpoint" class="text-xs text-muted"></div>
                       </div>
                     </div>
-                    <hr />
+                    <div class="ms-4 small">
+                      <div id="soapSubscribeResp" class="rounded-circle" style="width: 15px; height: 15px;"></div>
+                    </div>
+                  </div>
+                  <hr />
 
-                    <div
-                      class="d-flex align-items-center justify-content-between px-4"
-                    >
-                      <div class="d-flex align-items-center">
-                        <div class="ms-4">
-                          <div class="small">JSON Capture Server</div>
-                          <div class="text-xs text-muted">
-                            http://dfpl.sejong.ac.kr:8083/epcis/capture
-                          </div>
-                        </div>
-                      </div>
-                      <div class="ms-4 small">
-                        <div
-                          class="bg-success rounded-circle"
-                          style="width: 15px; height: 15px"
-                        ></div>
+                  <div class="d-flex align-items-center justify-content-between px-4">
+                    <div class="d-flex align-items-center">
+                      <div class="ms-4">
+                        <div class="small">JSON Capture Server</div>
+                        <div id="jsonCaptureEndpoint" class="text-xs text-muted"></div>
                       </div>
                     </div>
-                    <hr />
+                    <div class="ms-4 small">
+                      <div id="jsonCaptureResp" class="rounded-circle" style="width: 15px; height: 15px;"></div>
+                    </div>
+                  </div>
+                  <hr />
 
-                    <div
-                      class="d-flex align-items-center justify-content-between px-4"
-                    >
-                      <div class="d-flex align-items-center">
-                        <div class="ms-4">
-                          <div class="small">REST Query Server</div>
-                          <div class="text-xs text-muted">
-                            http://dfpl.sejong.ac.kr:8084/epcis/query
-                          </div>
-                        </div>
-                      </div>
-                      <div class="ms-4 small">
-                        <div
-                          class="bg-danger rounded-circle"
-                          style="width: 15px; height: 15px"
-                        ></div>
+                  <div class="d-flex align-items-center justify-content-between px-4">
+                    <div class="d-flex align-items-center">
+                      <div class="ms-4">
+                        <div class="small">REST Query Server</div>
+                        <div id="restQueryEndpoint" class="text-xs text-muted"></div>
                       </div>
                     </div>
-
-                    <!--
-                    <ul>
-                      
-                      <li class="carousel-indicators">
-                        
-                        <br />
-                        http://dfpl.sejong.ac.kr:8080/epcis/capture
-                      </li>
-                    </ul>
-                    -->
+                    <div class="ms-4 small">
+                      <div id="restQueryResp" class="rounded-circle" style="width: 15px; height: 15px;"></div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-
-          <br />
         </div>
 
         <!-- Footer -->
 
-        <footer class="sticky-footer bg-footer mt-5">
+        <footer class="sticky-footer bg-footer mt-4">
           <!-- or #1a252f-->
 
           <div class="container-fluid mb-4 text-center text-gray-100">
@@ -411,22 +392,15 @@
               <!-- Footer Social Icons-->
               <div class="col-lg-4">
                 <h4 class="h3 mb-3">Follow me</h4>
-                <a class="btn btn-outline-light btn-social mx-1" href="#!"
-                  ><i class="fas fa-building fa-lg"></i
-                ></a>
-                <a class="btn btn-outline-light btn-social mx-1" href="#!"
-                  ><i class="fab fa-github fa-lg"></i
-                ></a>
+                <a class="btn btn-outline-light btn-social mx-1" href="#!"><i class="fas fa-building fa-lg"></i></a>
+                <a class="btn btn-outline-light btn-social mx-1" href="#!"><i class="fab fa-github fa-lg"></i></a>
               </div>
             </div>
           </div>
 
           <div class="container mb-2">
             <div class="copyright text-center my-auto">
-              <span class="text-gray-100"
-                >Copyright &copy; 2020-2022 Jaewook Byun all rights
-                reserved.</span
-              >
+              <span class="text-gray-100">Copyright &copy; 2020-2022 Jaewook Byun all rights reserved.</span>
             </div>
           </div>
         </footer>

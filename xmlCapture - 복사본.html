@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" href="image/autoid_logo.png">
+    <title>Oliot EPCIS X - XML Capture</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="node_modules/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="css/oliot.epcis.css" rel="stylesheet">
+        
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
+	<script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    
+    <script type="text/javascript" src="node_modules/codemirror/lib/codemirror.js"></script>
+	<script type="text/javascript" src="node_modules/codemirror/mode/xml/xml.js"></script>
+	<link rel="stylesheet" type="text/css" href="node_modules/codemirror/lib/codemirror.css"></link>
+	<link rel="stylesheet" type="text/css" href="node_modules/codemirror/theme/eclipse.css"></link>
+    
+<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-64257932-1"></script>
+	<script>
+  		window.dataLayer = window.dataLayer || [];
+  		function gtag(){dataLayer.push(arguments);}
+  			gtag('js', new Date());
+
+			  gtag('config', 'UA-64257932-1');
+	</script>
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PSBGJQPT56"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PSBGJQPT56');
+</script>
+    
+    
+	<script>
+	var href = window.location.href;
+	var hrefArr = href.split("/");
+	var baseURL = hrefArr[0] + "//" + hrefArr[2] + "/epcis";
+	
+	var xmlCaptureBaseURL = "";
+	var xmlValidationURL = "";
+	var xmlCaptureURL = "";
+	
+	var xmlEditor;
+	
+	$(document).ready(function() {
+	    xmlEditor = CodeMirror.fromTextArea(document.getElementById('xmlTextArea'), {
+	        matchBrackets: true,
+	        autoCloseBrackets: true,
+	        mode: "application/xml",
+	        lineNumbers: true,
+	        theme: 'eclipse'
+	    });
+	
+	    $.ajax({
+	        type: "GET",
+	        url: baseURL + "/stats",
+	        crossOrigin: true
+	    }).done(function(result) {
+	        xmlCaptureBaseURL = result.xmlCaptureBase;
+	        xmlValidationURL = xmlCaptureBaseURL + "/validation";
+	        xmlCaptureURL = xmlCaptureBaseURL + "/capture";
+	
+	        // Connection to the server
+	        $.ajax({
+	            type: "GET",
+	            url: xmlCaptureBaseURL,
+	            crossOrigin: true
+	        }).done(function(result) {
+	            $("#xmlCaptureResp").removeClass().addClass("bi-reception-4");
+	            $("#xmlCaptureEndpoint").html(xmlCaptureBaseURL + "/capture");
+	        }).fail(function(result) {
+	            $("#xmlCaptureResp").removeClass().addClass("bi-reception-0");
+	            $("#xmlCaptureEndpoint").html(xmlCaptureBaseURL + "/capture");
+	        });
+	
+	        // Retrieve examples
+	        $.ajax({
+	            type: "GET",
+	            url: baseURL + "/capture/examples",
+	            crossOrigin: true
+	        }).done(function(result1) {
+	            $.each(JSON.parse(result1), function(key1, value1) {
+	            	// console.log(key1);
+	                $(".dropdown-menu").append("<li class=\"dropdown-header\">" + key1 + "</li>");
+	                $("#exampleBody").append("<tr><td>" + key1 + "</td><td id='t_" + key1 + "'></td></tr>");
+	                $.each(value1, function(key2, value2) {
+	                    // console.log(value2);
+	                    if (value2 != "") {
+	                        $(".dropdown-menu").append("<li><a id='/epcis/home/example/capture/" + key1 + "/" + value2 + "' href='#'>" + value2 + "</a></li>");
+	                        $("#t_" + key1).append("<button type='button' class='btn btn-info btn-sm mr-3 mb-3' id='/epcis/home/example/capture/" + key1 + "/" + value2 + "' onclick='loadExample(this)'>" + value2 + "</button>&nbsp&nbsp");
+	                    }
+	                });
+	            });
+	        });
+	    }).fail(function(result) {
+			$("#xmlCaptureResp").removeClass().addClass("bi-reception-0");
+	    });
+	
+	    // Catch paste event
+	    xmlEditor.getWrapperElement().addEventListener('paste', function(e) {
+	        if (!e.clipboardData) return;
+	        isValid();
+	    });
+	})
+	
+	function capture() {
+	    var captureXMLString = xmlEditor.getValue();
+	    var url = $("#xmlCaptureEndpoint").html();
+	
+	    $.ajax({
+	        type: "POST",
+	        url: url,
+	        data: captureXMLString,
+	        contentType: "application/xml; charset=utf-8",
+	        crossOrigin: true
+	    }).done(function(result) {
+	        $("#resp").val("success with capture ID: " + result).hide().fadeIn('slow');
+	    }).fail(function(result) {
+	        $("#resp").val("fail with capture ID: " + result.responseText).hide().fadeIn('slow');
+	    });
+	}
+	
+	function loadExample(btn) {
+	    $('#xmlTextArea').load(btn.id, function() {
+	        xmlEditor.setValue($('#xmlTextArea').val());
+	        isValid();
+	    });
+	
+	    $('#exampleModal').modal('hide');
+	}
+	
+	function isValid() {
+	    $.ajax({
+	        type: "POST",
+	        url: xmlValidationURL,
+	        data: xmlEditor.getValue(),
+	        contentType: "application/xml; charset=utf-8",
+	        crossOrigin: true
+	    }).done(function(result) {
+	        $("#docValResp")
+	            .val("Valid Document")
+	            .hide()
+	            .fadeIn('slow');
+	    }).fail(function(result) {
+	        $("#docValResp")
+	            .val(result.responseText)
+	            .hide()
+	            .fadeIn('slow');
+	    });
+	}
+	</script>
+</head>
+<body class="d-flex flex-column h-100">
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+		<div class="container-fluid">
+			<a class="navbar-brand" href="index.html">Oliot EPCIS X</a>
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#bs-example-navbar-collapse-1" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<div class="navbar-nav">
+					<a href="index.html" class="nav-link">Home</a>
+					<a href="xmlCapture.html" class="nav-link active">XML Capture Client</a>
+					<a href="xmlSingleCapture.html" class="nav-link">XML Capture Client (Single)</a>
+					<a href="soapQuery.html" class="nav-link">SOAP Query Client</a>
+					<a href="soapSubscribe.html" class="nav-link">SOAP Subscription Client</a>
+					<a href="jsonCapture.html" class="nav-link">JSON Capture Client</a>
+					<a href="restQuery.html" class="nav-link">REST Event Query Client</a>
+					<a href="restSubscribe.html" class="nav-link">REST Event Subscribe Client</a>
+					<a href="restMDQuery.html" class="nav-link">REST Master Data Query Client</a>
+					<a href="foodKoachCapture.html" class="nav-link">FoodKoach Capture Service</a>
+					<a href="foodKoachNutriScore.html" class="nav-link">FoodKoach NutriScore</a>
+				</div>
+			</div>
+		</div>
+	</nav>
+	<main class="flex-shrink-0">
+		<div class="container">
+			<div class="row my-3">
+				<div class="col-sm-4">
+					<div class="card">
+						<div class="card-header">
+							<i class="bi-hdd-stack mr-2"></i>Capture Service Endpoint
+						</div>
+						<ul class="list-group list-group-flush">
+							<li class="list-group-item d-flex justify-content-between align-items-start">
+								<div class="ms-2 me-auto">
+									<div class="fw-bold">XML Capture Server</div>
+									<div id="xmlCaptureEndpoint">
+									</div>
+								</div>
+								<span>
+								<i id="xmlCaptureResp" class="bi-reception-0"></i>
+								</span>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="col">
+					<h4>This page enables you to learn and use EPCIS capture interface.</h4>
+					<button class="btn btn-outline-primary" data-bs-target="#instructionsModal" data-bs-toggle="modal">Instructions</button>
+					<button class="btn btn-outline-primary" data-bs-target="#exampleModal" data-bs-toggle="modal">Loading an example</button>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-4">
+					<div>
+						<h5>Document Capture</h5>
+						<div class="row">
+							<div class="col-sm-3 mr-2">
+								<button type="button" class="btn btn-success" onclick="capture()">Capture</button>
+							</div>
+							<div class="col">
+								<input id="resp" type="text" class="form-control" disabled placeholder="Response of Capture">
+							</div>
+						</div>
+					</div>
+					<div class="mt-3">
+						<h4>Validation Service</h4>
+						<button type="button" class="btn btn-info mb-1" onclick="isValid()">Validate</button>
+						<textarea id="docValResp" class="form-control auto-text-area" rows="6" disabled placeholder="The validation result against EPCISDocument schema. This service will be invoked after loading an example in a dropdown menu or clicking 'isValid' button."></textarea>
+					</div>
+				</div>
+				<div class="col-sm-8">
+					<h4>HTTP.POST Body</h4>
+					<textarea id="xmlTextArea" class="form-control auto-text-area" rows="25"></textarea>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade" id="instructionsModal" tabindex="-1">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Instruction for the capture client</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+						</button>
+					</div>
+					<div class="modal-body text-start">
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+									<td>Method Name</td>
+									<td>Description</td>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>
+										<h5>capture</h5>
+									</td>
+									<td>
+										<ul class="list-group">
+											<li class="list-group-item">This service allows you to store your EPCIS Document into your backend storage
+												<br>Note: use /vocabularyCapture for epcis:EPCISMasterDataDocument
+											</li>
+											<li class="list-group-item">Method: post</li>
+											<li class="list-group-item">Contents: application/xml, complying with
+												<a href="./schema/EPCglobal-epcis-2_0.xsd">EPCIS v2.0 XML Schema</a>
+											</li>
+											<li class="list-group-item">
+												How to use:
+												<ul>
+													<li>Load an example in a dropdown menu or Copy/paste your own EPCIS document into a textbox</li>
+													<li>See the validation result against EPCISDocument schema</li>
+													<li>You can even capture the valid document by clicking a capture button</li>
+												</ul>
+											</li>
+										</ul>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="modal fade" id="exampleModal" tabindex="-1">
+			<div class="modal-dialog modal-fullscreen">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Examples for EPCIS Document: click a button to load an example</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+						</button>
+					</div>
+					<div class="modal-body">
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+									<td>Document Group</td>
+									<td>Example</td>
+								</tr>
+							</thead>
+							<tbody id="exampleBody">
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</main>
+	
+	<footer class="footer bg-dark mt-auto text-white py-2">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-3 text-center">
+					<h5>Copyright &copy; 2020-2022</h5>
+					<h5>Jaewook Byun</h5>
+					<h5>all rights reserved. </h5>
+				</div>
+				<div class="col">
+					<h5>Assistant Professor, Sejong University, Republic of Korea</h5>
+					<h5>Associate Director, Auto-ID Labs, Korea</h5>
+				</div>
+				<div class="col-sm-3">
+					<h5>
+						<span class="bi-github">
+						</span>&nbsp;&nbsp;
+						<a href="https://github.com/JaewookByun/epcis" class="text-white text-decoration-none">Github</a>
+					</h5>
+					<h5>
+						<i class="bi-book" class="text-white"></i>&nbsp;&nbsp;
+						<a href="https://sites.google.com/view/jack-dfpl/home" class="text-white text-decoration-none">DFPL</a>
+					</h5>
+				</div>
+			</div>
+		</div>
+	</footer>
+</body>
+</html>
