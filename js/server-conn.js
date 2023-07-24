@@ -3,48 +3,46 @@ let hrefArr = href.split("/");
 let baseURL = hrefArr[0] + "//" + hrefArr[2] + "/epcis";
 
 let baseURLs = {};
+let eventCount, vocabularyCount;
 
-$(document).ready(() => {
-  // Connection to the server
-  $.ajax({
-    url: baseURL + "/stats",
-    crossOrigin: true,
-  })
-    .done((result) => {
-      // [URL, (capture or query)]
-      baseURLs.xmlCaptureBaseURL = [result.xmlCaptureBase, "capture"];
-      baseURLs.soapQueryBaseURL = [result.soapQueryBase, "query"];
-      baseURLs.soapSubscribeBaseURL = [result.soapSubscribeBase, "query"];
-      baseURLs.jsonCaptureBaseURL = [result.jsonCaptureBase, "capture"];
-      baseURLs.restQueryBaseURL = [result.restQueryBase, "query"];
-      baseURLs.restSubscribeBaseURL = [result.restSubscribeBase, "query"];
-      $("#eventsCount").html(result.eventCount);
-      $("#vocabularyCount").html(result.vocabularyCount);
 
-      for (const URL in baseURLs) {
-        const regex = /(\w+)BaseURL/;
-        let divId = URL.match(regex)[1];
+// Connection to the server
+$.ajax({
+  url: baseURL + "/stats",
+  crossOrigin: true,
+}).done((result) => {
+  // [URL, (capture or query)]
+  baseURLs.xmlCaptureBaseURL = [result.xmlCaptureBase, "capture"];
+  baseURLs.soapQueryBaseURL = [result.soapQueryBase, "query"];
+  baseURLs.soapSubscribeBaseURL = [result.soapSubscribeBase, "query"];
+  baseURLs.jsonCaptureBaseURL = [result.jsonCaptureBase, "capture"];
+  baseURLs.restQueryBaseURL = [result.restQueryBase, "query"];
+  baseURLs.restSubscribeBaseURL = [result.restSubscribeBase, "query"];
+  eventCount = result.eventCount;
+  vocabularyCount = result.vocabularyCount;
 
-        $.ajax({
-          url: baseURLs[URL][0],
-          crossOrigin: true,
+  $(document).ready(() => {
+    $("#eventsCount").html(eventCount);
+    $("#vocabularyCount").html(vocabularyCount);
+
+    for (const URL in baseURLs) {
+      const regex = /(\w+)BaseURL/;
+      let divId = URL.match(regex)[1];
+
+      $.ajax({
+        url: baseURLs[URL][0],
+        crossOrigin: true,
+      })
+        .done(() => {
+          $("#" + divId + "Resp").removeClass('bg-danger').addClass("bg-success");
         })
-          .done(() => {
-            $("#" + divId + "Resp").addClass("bg-success");
-          })
-          .fail(() => {
-            $("#" + divId + "Resp").addClass("bg-danger");
-          })
-          .always(() => {
-            $("#" + divId + "Endpoint").html(
-              baseURLs[URL][0] + "/" + baseURLs[URL][1]
-            );
-          });
-      }
-    })
-    .fail(() => {
-      $(".rounded-circle").addClass("bg-danger");
-    });
+        .always(() => {
+          $("#" + divId + "Endpoint").html(
+            baseURLs[URL][0] + "/" + baseURLs[URL][1]
+          );
+        });
+    }
+  })
 });
 
 function resetDB() {

@@ -15,15 +15,11 @@
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet" />
 
-
-    
     <script type="text/javascript" src="codemirror/lib/codemirror.js"></script>
     <script type="text/javascript" src="codemirror/mode/xml/xml.js"></script>
     <link rel="stylesheet" type="text/css" href="codemirror/lib/codemirror.css"></link>
     <link rel="stylesheet" type="text/css" href="codemirror/theme/eclipse.css"></link>
 
-    <script defer src="js/server-conn.js"></script>
-    <script defer src="js/tmp.js"></script>
   </head>
 
   <body id="page-top">
@@ -183,7 +179,7 @@
                       </div>
 
                       <div class="card-body p-0">   
-                        <textarea id="xmlTextArea" class="form-control auto-text-area"></textarea>
+                        <textarea id="textArea" class="form-control auto-text-area"></textarea>
                       </div>
                 </div>
             </div>
@@ -207,7 +203,7 @@
                       </div>
                     </div>
                     <div class="ms-4 small">
-                      <div id="xmlCaptureResp" class="rounded-circle" style="width: 15px; height: 15px;"></div>
+                      <div id="xmlCaptureResp" class="rounded-circle bg-danger" style="width: 15px; height: 15px;"></div>
                     </div>
                   </div>
                 </div>
@@ -218,7 +214,7 @@
                   <span class="m-0 font-weight-bold text-custom text-lg">
                     Validation Service 
                     </span>
-                    <button class="btn btn-success ml-auto" onclick="isValid()">Validate</button>
+                    <button id="val" class="btn btn-success ml-auto" onclick="isValid()">Validate</button>
                 </div>
                 <div class="card-body text-gray-800">
                     <textarea id="docValResp" class="form-control auto-text-area" rows="6" disabled placeholder="The validation result against EPCISDocument schema. This service will be invoked after loading an example in a dropdown menu or clicking 'isValid' button."></textarea>
@@ -301,5 +297,42 @@
     <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
     <!-- Custom scripts for all pages-->
     <script src="js/sb-admin-2.min.js"></script>
+
+    
+    <script src="js/modules.js"></script>
+    <script defer>
+        let captureBaseURL = "";
+        let validationURL = "";
+        let captureURL = "";
+
+        // codemirror
+        let format = "xml";
+        let editor;
+
+        $(document).ready(() => {
+            editor = initEditor();
+            $.ajax({
+                url: baseURL + "/stats",
+                crossOrigin: true
+            }).done((result) => {
+                captureBaseURL = result.xmlCaptureBase;
+                validationURL = captureBaseURL + "/validation";
+                captureURL = captureBaseURL + "/capture";
+
+                // Connection to the server
+                $.ajax({
+                    url: captureBaseURL,
+                    crossOrigin: true
+                }).done((result) => {
+                    $("#xmlCaptureResp").removeClass('bg-danger').addClass("bg-success");  
+                }).always(() => {
+                    $("#xmlCaptureEndpoint").html(captureURL);
+                });
+
+                // Retrieve examples
+                retrieveExamples(retrieveSubURL = "/capture/examples", exampleMiddleURL = "/example/capture");
+            })
+        })
+    </script>
   </body>
 </html>
