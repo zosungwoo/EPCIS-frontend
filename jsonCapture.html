@@ -7,7 +7,7 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
 
-    <title>Oliot EPCIS - XML Capture</title>
+    <title>Oliot EPCIS - JSON Capture</title>
 
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css" />
@@ -16,7 +16,7 @@
     <link href="css/sb-admin-2.min.css" rel="stylesheet" />
 
     <script type="text/javascript" src="codemirror/lib/codemirror.js"></script>
-    <script type="text/javascript" src="codemirror/mode/xml/xml.js"></script>
+    <script type="text/javascript" src="codemirror/mode/javascript/javascript.js"></script>
     <link rel="stylesheet" type="text/css" href="codemirror/lib/codemirror.css"></link>
     <link rel="stylesheet" type="text/css" href="codemirror/theme/eclipse.css"></link>
 
@@ -38,7 +38,7 @@
         <hr class="sidebar-divider" />
 
         <div class="sidebar-heading">XML</div>
-        <li class="nav-item active">
+        <li class="nav-item">
           <a class="nav-link" href="xmlCapture.html">
             <span>XML Capture Client</span>
           </a>
@@ -66,7 +66,7 @@
         <hr class="sidebar-divider" />
 
         <div class="sidebar-heading">JSON</div>
-        <li class="nav-item">
+        <li class="nav-item active">
           <a class="nav-link" href="jsonCapture.html">
             <span>JSON Capture Client</span>
           </a>
@@ -126,7 +126,7 @@
           <div class="bg-header pt-4 pb-10">
             <div class="pt-4 px-5">
               <h1 class="h1 text-gray-100 font-weight-bold mb-4">
-                XML Capture Client
+                JSON Capture Client
               </h1>
 
               <div class="text-gray-100">
@@ -167,10 +167,9 @@
                                                     <tr class="odd">
                                                       <td class="font-weight-bold h5">Capture</td>
                                                       <td>
-                                                          This service allows you to store your EPCIS Document into your backend storage <br>
-                                                          <em>Note: use /vocabularyCapture for epcis:EPCISMasterDataDocument</em> <br> <br>
+                                                          This service allows you to store your EPCIS Document in a JSON format into your backend storage <br>
                                                           <b>Method</b>: POST <br>
-                                                          <b>Contents</b>: application/xml, complying with <a href="./schema/EPCglobal-epcis-2_0.xsd">EPCIS v2.0 XML Schema</a> <br> <br>
+                                                          <b>Contents</b>: application/json, complying with <a href="./schema/EPCIS-JSON-Schema.json">EPCIS v2.0 XML Schema</a> <br> <br>
                                                           How to use: <br>
                                                           <ul>
                                                               <li>Load an example in a dropdown menu or Copy/paste your own EPCIS document into a textbox</li>
@@ -234,7 +233,7 @@
                   <div class="d-flex align-items-center justify-content-between px-4">
                     <div class="d-flex align-items-center">
                       <div class="ms-4">
-                        <div class="small">XML Capture Server</div>
+                        <div class="small">JSON Capture Server</div>
                         <div id="captureEndpoint" class="text-xs text-muted"></div>
                       </div>
                     </div>
@@ -342,7 +341,7 @@
         let captureURL = "";
 
         // codemirror
-        let format = "xml";
+        let format = "json";
         let editor;
 
         $(document).ready(() => {
@@ -351,7 +350,7 @@
                 url: baseURL + "/stats",
                 crossOrigin: true
             }).done((result) => {
-                captureBaseURL = result.xmlCaptureBase;
+                captureBaseURL = result.jsonCaptureBase;
                 validationURL = captureBaseURL + "/validation";
                 captureURL = captureBaseURL + "/capture";
 
@@ -366,7 +365,7 @@
                 });
 
                 // Retrieve examples
-                retrieveExamples(retrieveSubURL = "/capture/examples", exampleMiddleURL = "/example/capture");
+                retrieveExamples(retrieveSubURL = "/jsoncapture/examples", exampleMiddleURL = "/example/capture-json");
             })
         })
     </script>

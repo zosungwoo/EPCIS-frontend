@@ -7,7 +7,7 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
 
-    <title>Oliot EPCIS - XML Capture</title>
+    <title>Oliot EPCIS</title>
 
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css" />
@@ -38,12 +38,12 @@
         <hr class="sidebar-divider" />
 
         <div class="sidebar-heading">XML</div>
-        <li class="nav-item active">
+        <li class="nav-item">
           <a class="nav-link" href="xmlCapture.html">
             <span>XML Capture Client</span>
           </a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item active">
           <a class="nav-link" href="xmlSingleCapture.html">
             <span>XML Capture Client (single)</span>
           </a>
@@ -126,7 +126,7 @@
           <div class="bg-header pt-4 pb-10">
             <div class="pt-4 px-5">
               <h1 class="h1 text-gray-100 font-weight-bold mb-4">
-                XML Capture Client
+                XML Capture Client (Single)
               </h1>
 
               <div class="text-gray-100">
@@ -167,15 +167,15 @@
                                                     <tr class="odd">
                                                       <td class="font-weight-bold h5">Capture</td>
                                                       <td>
-                                                          This service allows you to store your EPCIS Document into your backend storage <br>
+                                                        This service allows you to capture your 'single' event inside EPCIS Document into your backend storage <br>
                                                           <em>Note: use /vocabularyCapture for epcis:EPCISMasterDataDocument</em> <br> <br>
                                                           <b>Method</b>: POST <br>
                                                           <b>Contents</b>: application/xml, complying with <a href="./schema/EPCglobal-epcis-2_0.xsd">EPCIS v2.0 XML Schema</a> <br> <br>
                                                           How to use: <br>
                                                           <ul>
-                                                              <li>Load an example in a dropdown menu or Copy/paste your own EPCIS document into a textbox</li>
-                                                              <li>See the validation result against EPCISDocument schema</li>
-                                                              <li>You can even capture the valid document by clicking a capture button</li>
+                                                            <li>Load an example in a dropdown menu or Copy/paste your own EPCIS document into a textbox</li>
+                                                            <li>See the validation result against EPCISDocument schema</li>
+                                                            <li>You can even capture the valid document by clicking a capture button</li>
                                                           </ul>
                                                       </td>
                                                     </tr>
@@ -265,7 +265,7 @@
                 <div class="card-body text-gray-800">
                     <div class="row">
                         <div class="col-lg-3">
-                            <button type="button" class="btn btn-info w-100" onclick="capture()">Capture</button>
+                            <button type="button" class="btn btn-info w-100" onclick="singleCapture()">Capture</button>
                         </div>
                         <div class="col">
                             <input id="resp" type="text" class="form-control" disabled placeholder="Response of Capture">
@@ -353,7 +353,7 @@
             }).done((result) => {
                 captureBaseURL = result.xmlCaptureBase;
                 validationURL = captureBaseURL + "/validation";
-                captureURL = captureBaseURL + "/capture";
+                captureURL = captureBaseURL + "/events";
 
                 // Connection to the server
                 $.ajax({
@@ -366,7 +366,7 @@
                 });
 
                 // Retrieve examples
-                retrieveExamples(retrieveSubURL = "/capture/examples", exampleMiddleURL = "/example/capture");
+                retrieveExamples(retrieveSubURL = "/xmlsinglecapture/examples", exampleMiddleURL = "/example/capture-xml-single");
             })
         })
     </script>

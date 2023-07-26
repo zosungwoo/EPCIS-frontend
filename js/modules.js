@@ -18,6 +18,22 @@ function capture() {
     });
 }
 
+function singleCapture() {
+    let captureString = editor.getValue();
+
+    $.ajax({
+        type: "POST",
+        url: captureURL,
+        data: captureString,
+        contentType: "application/" + format + "; charset=utf-8",
+        crossOrigin: true
+    }).done((result) => {
+        $("#resp").val("Status: 200 OK" + result).hide().fadeIn('slow');
+    }).fail((result) => {
+        $("#resp").val(result.responseText).hide().fadeIn('slow');
+    });
+}
+
 function loadExample(btn) {
     $('#textArea').load(btn.id, () => {
         editor.setValue($('#textArea').val());
@@ -48,13 +64,16 @@ function isValid() {
 }
 
 function initEditor(size = 515){
+    let textAreaMode;
     if(format === "json")
-        format = "ld+json";
+        textAreaMode = "ld+json";
+    else
+        textAreaMode = format;
 
     let editor = CodeMirror.fromTextArea(document.getElementById('textArea'), {
         matchBrackets: true,
         autoCloseBrackets: true,
-        mode: "application/" + format,
+        mode: "application/" + textAreaMode,
         lineNumbers: true,
         indentUnit: 4,
         theme: 'eclipse',
