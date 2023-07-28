@@ -12,12 +12,12 @@ $.ajax({
   crossOrigin: true,
 }).done((result) => {
   // [URL, (capture or query)]
-  baseURLs.xmlCaptureBaseURL = [result.xmlCaptureBase, "capture"];
-  baseURLs.soapQueryBaseURL = [result.soapQueryBase, "query"];
-  baseURLs.soapSubscribeBaseURL = [result.soapSubscribeBase, "query"];
-  baseURLs.jsonCaptureBaseURL = [result.jsonCaptureBase, "capture"];
-  baseURLs.restQueryBaseURL = [result.restQueryBase, "query"];
-  baseURLs.restSubscribeBaseURL = [result.restSubscribeBase, "query"];
+  // baseURLs.xmlCaptureBaseURL = [result.xmlCaptureBase, "capture"];
+  // baseURLs.soapQueryBaseURL = [result.soapQueryBase, "query"];
+  // baseURLs.soapSubscribeBaseURL = [result.soapSubscribeBase, "query"];
+  // baseURLs.jsonCaptureBaseURL = [result.jsonCaptureBase, "capture"];
+  // baseURLs.restQueryBaseURL = [result.restQueryBase, "query"];
+  // baseURLs.restSubscribeBaseURL = [result.restSubscribeBase, "query"];
   eventCount = result.eventCount;
   vocabularyCount = result.vocabularyCount;
 
@@ -25,23 +25,26 @@ $.ajax({
     $("#eventsCount").html(eventCount);
     $("#vocabularyCount").html(vocabularyCount);
 
-    for (const URL in baseURLs) {
-      const regex = /(\w+)BaseURL/;
-      let divId = URL.match(regex)[1];
+    $("#mainServerResp").removeClass('bg-danger').addClass("bg-success");
+    $("#mainServerEndpoint").html(hrefArr[0] + "//" + hrefArr[2] + ":8080/epcis");
 
-      $.ajax({
-        url: baseURLs[URL][0],
-        crossOrigin: true,
-      })
-        .done(() => {
-          $("#" + divId + "Resp").removeClass('bg-danger').addClass("bg-success");
-        })
-        .always(() => {
-          $("#" + divId + "Endpoint").html(
-            baseURLs[URL][0] + "/" + baseURLs[URL][1]
-          );
-        });
-    }
+    // for (const URL in baseURLs) {
+    //   const regex = /(\w+)BaseURL/;
+    //   let divId = URL.match(regex)[1];
+
+    //   $.ajax({
+    //     url: baseURLs[URL][0],
+    //     crossOrigin: true,
+    //   })
+    //     .done(() => {
+    //       $("#" + divId + "Resp").removeClass('bg-danger').addClass("bg-success");
+    //     })
+    //     .always(() => {
+    //       $("#" + divId + "Endpoint").html(
+    //         baseURLs[URL][0] + "/" + baseURLs[URL][1]
+    //       );
+    //     });
+    // }
   })
 });
 

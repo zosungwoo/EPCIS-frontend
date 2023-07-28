@@ -2,6 +2,7 @@ const href = "http://127.0.0.1/epcis/home/index.html"; // 수정
 let hrefArr = href.split("/");
 let baseURL = hrefArr[0] + "//" + hrefArr[2] + "/epcis";
 
+// v2.0에 맞게 수정해야 함 (헤더에 포함되어 있는 키 사용)
 function capture() {
     let captureString = editor.getValue();
 
@@ -10,11 +11,53 @@ function capture() {
         url: captureURL,
         data: captureString,
         contentType: "application/" + format + "; charset=utf-8",
-        crossOrigin: true
-    }).done((result) => {
-        $("#resp").val("success with capture ID: " + result).hide().fadeIn('slow');
+        crossOrigin: true,
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("GS1-EPCIS-Version", "2.0.0");
+            xhr.setRequestHeader("GS1-CBV-Version", "2.0.0");
+            xhr.setRequestHeader("GS1-EPCIS-Capture-Error-Behaviour", "rollback");
+        }
+    }).done((data, textStatus, request) => {
+        let loc = request.getResponseHeader('Location')
+        if(!loc)
+        {
+            $("#resp").val("Success").hide().fadeIn('slow');
+            return;
+        }
+        let id = loc.split("/").pop();
+        $("#resp").val("Success with capture ID: " + id).hide().fadeIn('slow');
+        $("#status").removeClass("text-secondary text-success text-danger").addClass("text-warning Blink");
+
+        setTimeout(() => {
+            let interval = setInterval(() => {
+                $.ajax({
+                    url: captureURL + "/" + id,
+                    contentType: "application/" + format + "; charset=utf-8",
+                    dataType: "xml",
+                    crossOrigin: true,
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader("GS1-EPCIS-Min", "1.0.1");
+                        xhr.setRequestHeader("GS1-EPCIS-Max", "2.0.0");
+                    }
+                }).done((result) => {
+                    let running = $(result).find("ns2\\:epcisCaptureJobType").attr("running");
+                    
+                    if(running === "false"){
+                        clearInterval(interval);
+                        if($(result).find("finishedAt").text().length === 0)
+                            $("#status").removeClass("text-warning Blink").addClass("text-danger");
+                        else
+                            $("#status").removeClass("text-warning Blink").addClass("text-success");
+                    }
+                }).fail((result) => {
+                    $("#status").removeClass("text-warning Blink").addClass("text-danger");
+                    clearInterval(interval);
+                });
+            }, 1000);
+        }, 500);
     }).fail((result) => {
-        $("#resp").val("fail with capture ID: " + result.responseText).hide().fadeIn('slow');
+        $("#resp").val("Fail with capture ID: " + result.responseText).hide().fadeIn('slow');
+        $("#status").removeClass("text-success text-warning text-danger").addClass("text-secondary");
     });
 }
 
@@ -60,6 +103,8 @@ function isValid() {
             .val(result.responseText)
             .hide()
             .fadeIn('slow');
+    }).always((result) => {
+        $("#status").removeClass("text-warning text-success text-danger Blink").addClass("text-secondary");
     });
 }
 

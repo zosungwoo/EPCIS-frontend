@@ -9205,3 +9205,16 @@ footer.sticky-footer .copyright{
 body.sidebar-toggled footer.sticky-footer{
     width:100%
 }
+
+
+.Blink {
+     animation: blinker 0.5s cubic-bezier(.5, 0, 1, 1) infinite alternate;
+}
+ @keyframes blinker {
+     from {
+         opacity: 1;
+    }
+     to {
+         opacity: 0;
+    }
+}
