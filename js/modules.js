@@ -1,8 +1,20 @@
 const href = "http://127.0.0.1/epcis/home/index.html"; // 수정
 let hrefArr = href.split("/");
-let baseURL = hrefArr[0] + "//" + hrefArr[2] + "/epcis";
+let baseURL = hrefArr[0] + "//" + hrefArr[2] + ":8080/epcis";
 
-// v2.0에 맞게 수정해야 함 (헤더에 포함되어 있는 키 사용)
+function serverConn(){
+    $.ajax({
+        url: baseURL,
+        crossOrigin: true,
+    }).done(() => {
+        $("#serverResp").removeClass('bg-danger').addClass("bg-success");
+        $("#serverEndpoint").html(baseURL);
+    }).fail(() => {
+        $("#serverResp").removeClass('bg-success').addClass("bg-danger");
+        $("#serverEndpoint").html("");
+    });
+}
+
 function capture() {
     let captureString = editor.getValue();
 
@@ -40,6 +52,15 @@ function capture() {
                         xhr.setRequestHeader("GS1-EPCIS-Max", "2.0.0");
                     }
                 }).done((result) => {
+                    var xmlString = formatXml(new XMLSerializer().serializeToString(result));
+
+                    $("#details").val(xmlString);
+                    editor_details.setValue(xmlString);
+                    $('#detailsModal').on('shown.bs.modal', function() {
+                        editor_details.refresh();
+                    });
+                    
+
                     let running = $(result).find("ns2\\:epcisCaptureJobType").attr("running");
                     
                     if(running === "false"){
@@ -108,20 +129,21 @@ function isValid() {
     });
 }
 
-function initEditor(size = 515){
+function initEditor(id, readonly = false, size = 535){
     let textAreaMode;
     if(format === "json")
         textAreaMode = "ld+json";
     else
         textAreaMode = format;
 
-    let editor = CodeMirror.fromTextArea(document.getElementById('textArea'), {
+    let editor = CodeMirror.fromTextArea(document.getElementById(id), {
         matchBrackets: true,
         autoCloseBrackets: true,
         mode: "application/" + textAreaMode,
         lineNumbers: true,
         indentUnit: 4,
         theme: 'eclipse',
+        readOnly: readonly
     });
     editor.setSize(null, size);
     
@@ -136,8 +158,10 @@ function initEditor(size = 515){
 
 // Retrieve examples
 function retrieveExamples(retrieveSubURL, exampleMiddleURL){
+    let retrieveURL = baseURL + retrieveSubURL;
+    retrieveURL = retrieveURL.replace(":8080", "");
     $.ajax({
-        url: baseURL + retrieveSubURL,
+        url: retrieveURL,
         crossOrigin: true
     }).done((result) => {
         $.each(JSON.parse(result), (key, value) => {
@@ -153,4 +177,35 @@ function retrieveExamples(retrieveSubURL, exampleMiddleURL){
             $("#exampleBody").append(tr);
         })
     })
+}
+
+function formatXml(xml) {
+    var formatted = '';
+    var reg = /(>)(<)(\/*)/g;
+    xml = xml.replace(reg, '$1\r\n$2$3');
+    var pad = 0;
+    jQuery.each(xml.split('\r\n'), function(index, node) {
+        var indent = 0;
+        if (node.match(/.+<\/\w[^>]*>$/)) {
+            indent = 0;
+        } else if (node.match(/^<\/\w/)) {
+            if (pad != 0) {
+                pad -= 1;
+            }
+        } else if (node.match(/^<\w([^>]*[^\/])?>.*$/)) {
+            indent = 1;
+        } else {
+            indent = 0;
+        }
+
+        var padding = '';
+        for (var i = 0; i < pad; i++) {
+            padding += '  ';
+        }
+
+        formatted += padding + node + '\r\n';
+        pad += indent;
+    });
+
+    return formatted;
 }

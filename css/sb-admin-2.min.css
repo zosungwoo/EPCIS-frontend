@@ -6554,6 +6554,9 @@ a.bg-dark:focus,a.bg-dark:hover,button.bg-dark:focus,button.bg-dark:hover{
 .ml-n5,.mx-n5{
     margin-left:-3rem!important
 }
+.mt-nc{
+    margin-top:-2rem!important
+}
 .m-auto{
     margin:auto!important
 }
@@ -8726,6 +8729,11 @@ a:focus{
     width:1.8rem;
     font-size:.75rem
 }
+.btn-circle.btn-xs{
+    height:1.2rem;
+    width:1.2rem;
+    font-size:.75rem
+}
 .btn-circle.btn-lg,.btn-group-lg>.btn-circle.btn{
     height:3.5rem;
     width:3.5rem;
@@ -9216,5 +9224,17 @@ body.sidebar-toggled footer.sticky-footer{
     }
      to {
          opacity: 0;
+    }
+}
+
+.Blink2 {
+     animation: blinker 1s cubic-bezier(.5, 0, 1, 1) infinite alternate;
+}
+ @keyframes blinker {
+     from {
+         opacity: 1;
+    }
+     to {
+         opacity0;
     }
 }
