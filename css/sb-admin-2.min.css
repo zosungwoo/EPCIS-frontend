@@ -6555,7 +6555,7 @@ a.bg-dark:focus,a.bg-dark:hover,button.bg-dark:focus,button.bg-dark:hover{
     margin-left:-3rem!important
 }
 .mt-nc{
-    margin-top:-2rem!important
+    margin-top:-2rem!important;
 }
 .m-auto{
     margin:auto!important
@@ -8730,9 +8730,9 @@ a:focus{
     font-size:.75rem
 }
 .btn-circle.btn-xs{
-    height:1.2rem;
-    width:1.2rem;
-    font-size:.75rem
+    height:1.1rem;
+    width:1.1rem;
+    font-size:.5rem
 }
 .btn-circle.btn-lg,.btn-group-lg>.btn-circle.btn{
     height:3.5rem;
@@ -9235,6 +9235,6 @@ body.sidebar-toggled footer.sticky-footer{
          opacity: 1;
     }
      to {
-         opacity0;
+         opacity: 0;
     }
 }

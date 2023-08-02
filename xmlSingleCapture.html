@@ -7,7 +7,7 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
 
-    <title>Oliot EPCIS</title>
+    <title>Oliot EPCIS - XML Capture</title>
 
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css" />
@@ -235,11 +235,11 @@
                     <div class="d-flex align-items-center">
                       <div class="ms-4">
                         <div class="small">XML Capture Server</div>
-                        <div id="captureEndpoint" class="text-xs text-muted"></div>
+                        <div id="serverEndpoint" class="text-xs text-muted"></div>
                       </div>
                     </div>
                     <div class="ms-4 small">
-                      <div id="captureResp" class="rounded-circle bg-danger" style="width: 15px; height: 15px;"></div>
+                      <div id="serverResp" class="rounded-circle bg-danger Blink2" style="width: 15px; height: 15px;"></div>
                     </div>
                   </div>
                 </div>
@@ -344,30 +344,26 @@
         // codemirror
         let format = "xml";
         let editor;
+        let editor_details;
 
-        $(document).ready(() => {
-            editor = initEditor();
-            $.ajax({
-                url: baseURL + "/stats",
-                crossOrigin: true
-            }).done((result) => {
-                captureBaseURL = result.xmlCaptureBase;
-                validationURL = captureBaseURL + "/validation";
-                captureURL = captureBaseURL + "/events";
+        $.ajax({
+          url: baseURL + "/stats",
+          crossOrigin: true,
+        }).done((result) => {
+          captureBaseURL = result.xmlCaptureBase.replace("dfpl.sejong.ac.kr", "127.0.0.1");  // @@@@@@@@@@@@@@@ 수정
+          validationURL = captureBaseURL + "/validation";
+          captureURL = captureBaseURL + "/events";
 
-                // Connection to the server
-                $.ajax({
-                    url: captureBaseURL,
-                    crossOrigin: true
-                }).done((result) => {
-                    $("#captureResp").removeClass('bg-danger').addClass("bg-success");  
-                }).always(() => {
-                    $("#captureEndpoint").html(captureURL);
-                });
+          $(document).ready(() => {
+            editor = initEditor("textArea");
 
-                // Retrieve examples
-                retrieveExamples(retrieveSubURL = "/xmlsinglecapture/examples", exampleMiddleURL = "/example/capture-xml-single");
-            })
+            // Connection to the server
+            serverConn(captureBaseURL, "/events");
+            setInterval(serverConn, 2000, captureBaseURL, "/events");
+
+            // Retrieve examples
+            retrieveExamples(retrieveSubURL = "/xmlsinglecapture/examples", exampleMiddleURL = "/example/capture-xml-single");
+          })
         })
     </script>
   </body>

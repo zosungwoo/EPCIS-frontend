@@ -259,38 +259,37 @@
               <div class="card shadow mb-4">
                 <div class="card-header py-3 align-items-center d-flex">
                     <span class="m-0 font-weight-bold text-custom text-lg">
-                        Document Capture
+                      Document Capture
                     </span>
                     <button type="button" class="btn btn-info ml-auto" onclick="capture()">Capture</button>
                 </div>
-                <div class="card-body text-gray-800 align-items-center d-flex">
-                    <div class="col-lg-10 pr-2">
+                <div class="card-body text-gray-800 align-items-center d-flex pr-sm-0">
+                    <div class="col-lg-9 mr-2">
                         <input id="resp" type="text" class="form-control" disabled placeholder="Response of Capture">
                     </div>
-                    <div class="col-lg-2">
+                    <div class="col-lg-3">
                         <i class="fas fa-ellipsis-h text-secondary"></i> &nbsp;
                         <i id="status" class="fa fa-circle text-secondary fa-lg animated--fade-in"></i>
-                    </div>
-                    <div class="row">
 
-                      <button class="btn btn-secondary btn-circle btn-xs mt-nc" type="button" data-toggle="modal" data-target="#detailsModal">
-                        <i class="fas fa-info-circle fa-lg"></i>
-                      </button>
-
-                      <div class="modal fade" id="detailsModal" role="dialog">
-                          <div class="modal-dialog modal-xl">
-                              <div class="modal-content">
-                                  <div class="modal-header">
-                                      <h4>View Details</h4>
-                                      <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                  </div>
-                                  <div class="modal-body">
-                                    <textarea id="details" class="form-control auto-text-area"></textarea>
-                                    
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
+                        
+                        <button class="btn btn-secondary btn-circle btn-xs mt-nc p-0" type="button" data-toggle="modal" data-target="#detailsModal">
+                          <i class="fas fa-info-circle fa-lg"></i>
+                        </button>
+  
+                        <div class="modal fade" id="detailsModal" role="dialog">
+                            <div class="modal-dialog modal-xl">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4>View Details</h4>
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    </div>
+                                    <div class="modal-body">
+                                      <textarea id="details" class="form-control auto-text-area"></textarea>
+                                      
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
               </div>
@@ -367,32 +366,26 @@
         let editor;
         let editor_details;
 
-        $(document).ready(() => {
+        $.ajax({
+          url: baseURL + "/stats",
+          crossOrigin: true,
+        }).done((result) => {
+          captureBaseURL = result.xmlCaptureBase.replace("dfpl.sejong.ac.kr", "127.0.0.1");  // @@@@@@@@@@@@@@@ 수정
+          validationURL = captureBaseURL + "/validation";
+          captureURL = captureBaseURL + "/capture";
+
+          $(document).ready(() => {
             editor = initEditor("textArea");
             editor_details = initEditor("details", readonly=true);
-            $.ajax({
-                url: baseURL,
-                crossOrigin: true
-            }).done((result) => {
-                captureBaseURL = baseURL;
-                validationURL = captureBaseURL + "/validation";
-                captureURL = captureBaseURL + "/capture";
 
-                // Connection to the server
-                $.ajax({
-                    url: captureBaseURL,
-                    crossOrigin: true
-                }).done((result) => {
-                    $("#serverResp").removeClass('bg-danger').addClass("bg-success");
-                    $("#serverEndpoint").html(captureBaseURL);
-                });
+            // Connection to the server
+            serverConn(captureBaseURL, "/capture");
+            setInterval(serverConn, 2000, captureBaseURL, "/capture");
 
-                // Retrieve examples
-                retrieveExamples(retrieveSubURL = "/capture/examples", exampleMiddleURL = "/example/capture");
-            }).always(() => {
-              setInterval(serverConn, 2000);
-            })
-        })
+            // Retrieve examples
+            retrieveExamples(retrieveSubURL = "/capture/examples", exampleMiddleURL = "/example/capture");
+          });
+        });
     </script>
   </body>
 </html>

@@ -1,14 +1,14 @@
 const href = "http://127.0.0.1/epcis/home/index.html"; // 수정
 let hrefArr = href.split("/");
-let baseURL = hrefArr[0] + "//" + hrefArr[2] + ":8080/epcis";
+let baseURL = hrefArr[0] + "//" + hrefArr[2] + "/epcis";
 
-function serverConn(){
+function serverConn(url, subUrl = ""){
     $.ajax({
-        url: baseURL,
+        url: url,
         crossOrigin: true,
     }).done(() => {
         $("#serverResp").removeClass('bg-danger').addClass("bg-success");
-        $("#serverEndpoint").html(baseURL);
+        $("#serverEndpoint").html(url + subUrl);
     }).fail(() => {
         $("#serverResp").removeClass('bg-success').addClass("bg-danger");
         $("#serverEndpoint").html("");
@@ -40,6 +40,7 @@ function capture() {
         $("#resp").val("Success with capture ID: " + id).hide().fadeIn('slow');
         $("#status").removeClass("text-secondary text-success text-danger").addClass("text-warning Blink");
 
+        let cmp;
         setTimeout(() => {
             let interval = setInterval(() => {
                 $.ajax({
@@ -52,19 +53,21 @@ function capture() {
                         xhr.setRequestHeader("GS1-EPCIS-Max", "2.0.0");
                     }
                 }).done((result) => {
-                    var xmlString = formatXml(new XMLSerializer().serializeToString(result));
+                    let xmlString = formatXml(new XMLSerializer().serializeToString(result));
+                    let running = $(result).find("ns2\\:epcisCaptureJobType").attr("running");
 
+                    if(xmlString === cmp)  // 같은 응답 내용일 경우 건너뜀
+                        return;
+
+                    cmp = xmlString;
                     $("#details").val(xmlString);
                     editor_details.setValue(xmlString);
                     $('#detailsModal').on('shown.bs.modal', function() {
                         editor_details.refresh();
                     });
                     
-
-                    let running = $(result).find("ns2\\:epcisCaptureJobType").attr("running");
-                    
                     if(running === "false"){
-                        clearInterval(interval);
+                        clearInterval(interval);    
                         if($(result).find("finishedAt").text().length === 0)
                             $("#status").removeClass("text-warning Blink").addClass("text-danger");
                         else
@@ -90,7 +93,11 @@ function singleCapture() {
         url: captureURL,
         data: captureString,
         contentType: "application/" + format + "; charset=utf-8",
-        crossOrigin: true
+        crossOrigin: true,
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("GS1-EPCIS-Version", "2.0.0");
+            xhr.setRequestHeader("GS1-CBV-Version", "2.0.0");
+        }
     }).done((result) => {
         $("#resp").val("Status: 200 OK" + result).hide().fadeIn('slow');
     }).fail((result) => {
@@ -159,7 +166,6 @@ function initEditor(id, readonly = false, size = 535){
 // Retrieve examples
 function retrieveExamples(retrieveSubURL, exampleMiddleURL){
     let retrieveURL = baseURL + retrieveSubURL;
-    retrieveURL = retrieveURL.replace(":8080", "");
     $.ajax({
         url: retrieveURL,
         crossOrigin: true
