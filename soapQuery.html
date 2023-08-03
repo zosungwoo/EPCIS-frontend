@@ -7,7 +7,7 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
 
-    <title>Oliot EPCIS - XML Capture</title>
+    <title>Oliot EPCIS - SOAP Query</title>
 
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css" />
@@ -43,7 +43,7 @@
             <span>XML Capture Client</span>
           </a>
         </li>
-        <li class="nav-item active">
+        <li class="nav-item">
           <a class="nav-link" href="xmlSingleCapture.html">
             <span>XML Capture Client (single)</span>
           </a>
@@ -52,7 +52,7 @@
         <hr class="sidebar-divider" />
 
         <div class="sidebar-heading">SOAP</div>
-        <li class="nav-item">
+        <li class="nav-item active">
           <a class="nav-link" href="soapQuery.html">
             <span>SOAP Query Client</span>
           </a>
@@ -126,19 +126,19 @@
           <div class="bg-header pt-4 pb-10">
             <div class="pt-4 px-5">
               <h1 class="h1 text-gray-100 font-weight-bold mb-4">
-                XML Capture Client (Single)
+                SOAP Query Client
               </h1>
 
               <div class="text-gray-100">
                 <p>
-                    This page enables you to learn and use EPCIS capture interface.
+                    This page enables you to learn and use EPCIS query interface.
                 </p>
               </div>
             </div>
           </div>
 
           <div class="row mt-n8 px-5">
-            <div class="col-lg-8">
+            <div class="col-lg-6">
                 <div class="card shadow mb-4">
                     <div class="card-header py-3 align-items-center d-flex">
                         <h6 class="m-0 font-weight-bold text-custom text-lg">
@@ -165,18 +165,28 @@
                                                 </thead>
                                                 <tbody>
                                                     <tr class="odd">
-                                                      <td class="font-weight-bold h5">Capture</td>
+                                                      <td class="font-weight-bold h5">
+                                                        <p>Poll</p>
+                                                        <p>GetStandardVersion</p>
+                                                        <p>GetVendorVersion</p>
+                                                        <p>GetQueryNames</p>
+                                                      </td>
                                                       <td>
-                                                        This service allows you to capture your 'single' event inside EPCIS Document into your backend storage <br>
-                                                          <em>Note: use /vocabularyCapture for epcis:EPCISMasterDataDocument</em> <br> <br>
-                                                          <b>Method</b>: POST <br>
-                                                          <b>Contents</b>: application/xml, complying with <a href="./schema/EPCglobal-epcis-2_0.xsd">EPCIS v2.0 XML Schema</a> <br> <br>
-                                                          How to use: <br>
-                                                          <ul>
-                                                            <li>Load an example in a dropdown menu or Copy/paste your own EPCIS document into a textbox</li>
-                                                            <li>See the validation result against EPCISDocument schema</li>
-                                                            <li>You can even capture the valid document by clicking a capture button</li>
-                                                          </ul>
+                                                        The services usable in this page allow providing query results. <br>
+                                                        <ul>
+                                                            <li>Poll: Return events/vocabularies stored in the EPCIS repository in interest immediately (For various query options, see EPCIS Section 8.2.7.1 and 8.2.7.2)</li>
+                                                            <li>GetStandardVersion: Return the standard version of EPCIS</li>
+                                                            <li>GetVendorVersion: Return the vendor specific version of EPCIS</li>
+                                                            <li>GetQueryNames: Return a list of all query names available</li>
+                                                        </ul>
+                                                        <em>Note: Subscribe/Unsubscribe/GetSubscriptionIDs are supported in the other module.</em> <br> <br>
+                                                        <b>Method</b>: POST <br>
+                                                        <b>Contents</b>: application/xml, complying with EPCIS WSDL <br> <br>
+                                                        How to use: <br>
+                                                        <ul>
+                                                        <li>Load an example in a dropdown menu or Copy/paste/text your own EPCIS query into a textbox</li>
+                                                        <li>Click 'Query' and See the results</li>
+                                                        </ul>
                                                       </td>
                                                     </tr>
                                                   </tbody>
@@ -186,7 +196,7 @@
                                 </div>
                             </div>
 
-                            <button class="btn btn-secondary ml-2" type="button" data-toggle="modal" data-target="#exampleModal">Load an Example</button>
+                            <button class="btn btn-secondary ml-2" type="button" data-toggle="modal" data-target="#exampleModal">Load a template</button>
 
                             <div class="modal fade" id="exampleModal" role="dialog">
                                 <div class="modal-dialog modal-lg modal-dialog-scrollable">
@@ -222,7 +232,7 @@
 
             
 
-            <div class="col-lg-4">
+            <div class="col-lg-6">
               <div class="card shadow mb-4">
                 <div class="card-header py-3">
                   <h6 class="m-0 font-weight-bold text-custom text-lg">
@@ -248,28 +258,14 @@
               <div class="card shadow mb-4">
                 <div class="card-header py-3 align-items-center d-flex">
                   <span class="m-0 font-weight-bold text-custom text-lg">
-                    Validation Service 
+                    Query Response 
                     </span>
-                    <button id="val" class="btn btn-success ml-auto" onclick="isValid()">Validate</button>
+                    <button id="val" class="btn btn-success ml-auto" onclick="">Query</button>
                 </div>
                 <div class="card-body text-gray-800">
-                    <textarea id="docValResp" class="form-control auto-text-area" rows="6" disabled placeholder="The validation result against EPCISDocument schema. This service will be invoked after loading an example in a dropdown menu or clicking 'isValid' button."></textarea>
+                    
                 </div>
               </div>
-              <div class="card shadow mb-4">
-                <div class="card-header py-3 align-items-center d-flex">
-                    <span class="m-0 font-weight-bold text-custom text-lg">
-                      Document Capture
-                    </span>
-                    <button type="button" class="btn btn-info ml-auto" onclick="capture()">Capture</button>
-                </div>
-                <div class="card-body text-gray-800">
-                    <div class="col">
-                        <input id="resp" type="text" class="form-control" disabled placeholder="Response of Capture">
-                    </div>
-                </div>
-              </div>
-              
             </div>
           </div>
         </div>
@@ -358,7 +354,7 @@
             setInterval(serverConn, 2000, captureBaseURL, "/events");
 
             // Retrieve examples
-            retrieveExamples(retrieveSubURL = "/xmlsinglecapture/examples", exampleMiddleURL = "/example/capture-xml-single");
+            retrieveExamples(retrieveSubURL = "/query/examples", exampleMiddleURL = "/example/query");
           })
         })
     </script>

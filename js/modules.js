@@ -15,6 +15,33 @@ function serverConn(url, subUrl = ""){
     });
 }
 
+function resetDB() {
+    let responseToast = $("#responseToast");
+  
+    $.ajax({
+      url: baseURL + "/reset",
+      crossOrigin: true,
+    })
+      .done((result) => {
+        responseToast.find(".toast-body").html("200 OK");
+      })
+      .fail((result) => {
+        responseToast.find(".toast-body").html(result.responseText);
+      })
+      .always((result) => {
+        responseToast.toast("show");
+        $.ajax({
+            url: baseURL + "/stats",
+            crossOrigin: true,
+          }).done((result) => {
+            eventCount = result.eventCount;
+            vocabularyCount = result.vocabularyCount;
+            $("#eventsCount").html(eventCount);
+            $("#vocabularyCount").html(vocabularyCount);
+          })
+      });
+  }
+
 function capture() {
     let captureString = editor.getValue();
 
