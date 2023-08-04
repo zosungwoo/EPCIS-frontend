@@ -17,27 +17,36 @@ function serverConn(url, subUrl = ""){
 
 function resetDB() {
     let responseToast = $("#responseToast");
+    let toastText;
+    $("#resetIcon").addClass("fa-spin");
   
     $.ajax({
-      url: baseURL + "/reset",
-      crossOrigin: true,
+        type: "DELETE",
+        url: baseURL,
+        crossOrigin: true,
+    }).done((result) => {
+        toastText = "200 OK";
+    }).fail((result) => {
+        toastText = result.responseText;
     })
-      .done((result) => {
-        responseToast.find(".toast-body").html("200 OK");
-      })
-      .fail((result) => {
-        responseToast.find(".toast-body").html(result.responseText);
-      })
-      .always((result) => {
+
+    setTimeout(() => {
+        responseToast.find(".toast-body").html(toastText);
         responseToast.toast("show");
+
         $.ajax({
             url: baseURL + "/statistics",
             crossOrigin: true,
-          }).done((result) => {
+        }).done((result) => {
             $("#eventCount").html(result.numOfEvents);
             $("#vocabularyCount").html(result.numOfVocabularies);
-          })
-      });
+        })
+        $("#resetIcon").removeClass("fa-spin");
+    }, 5000);
+
+    
+
+    
   }
 
 function capture() {
@@ -81,7 +90,7 @@ function capture() {
                     let xmlString = formatXml(new XMLSerializer().serializeToString(result));
                     let running = $(result).find("ns2\\:epcisCaptureJobType").attr("running");
 
-                    if(xmlString === cmp)  // 같은 응답 내용일 경우 건너뜀
+                    if(xmlString === cmp)  // 같은 응답 내용일 경우 모달창 업데이트 및 성공 여부 검사 건너뜀
                         return;
 
                     cmp = xmlString;
@@ -92,11 +101,13 @@ function capture() {
                     });
                     
                     if(running === "false"){
-                        clearInterval(interval);    
-                        if($(result).find("finishedAt").text().length === 0)
-                            $("#status").removeClass("text-warning Blink").addClass("text-danger");
-                        else
+                        let success = $(result).find("ns2\\:epcisCaptureJobType").attr("success");  
+                        if(success === "true")
                             $("#status").removeClass("text-warning Blink").addClass("text-success");
+                        else
+                            $("#status").removeClass("text-warning Blink").addClass("text-danger");
+                        
+                        clearInterval(interval);
                     }
                 }).fail((result) => {
                     $("#status").removeClass("text-warning Blink").addClass("text-danger");
@@ -185,7 +196,7 @@ function initEditor(id, readonly = false, size = 535){
         isValid();
     });
 
-    return editor
+    return editor;
 }
 
 // Retrieve examples
