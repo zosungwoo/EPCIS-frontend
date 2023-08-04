@@ -1,6 +1,6 @@
 const href = "http://127.0.0.1/epcis/home/index.html"; // 수정
 let hrefArr = href.split("/");
-let baseURL = hrefArr[0] + "//" + hrefArr[2] + "/epcis";
+let baseURL = hrefArr[0] + "//" + hrefArr[2] + ":8080/epcis";
 
 function serverConn(url, subUrl = ""){
     $.ajax({
@@ -31,13 +31,11 @@ function resetDB() {
       .always((result) => {
         responseToast.toast("show");
         $.ajax({
-            url: baseURL + "/stats",
+            url: baseURL + "/statistics",
             crossOrigin: true,
           }).done((result) => {
-            eventCount = result.eventCount;
-            vocabularyCount = result.vocabularyCount;
-            $("#eventsCount").html(eventCount);
-            $("#vocabularyCount").html(vocabularyCount);
+            $("#eventCount").html(result.numOfEvents);
+            $("#vocabularyCount").html(result.numOfVocabularies);
           })
       });
   }
@@ -192,7 +190,7 @@ function initEditor(id, readonly = false, size = 535){
 
 // Retrieve examples
 function retrieveExamples(retrieveSubURL, exampleMiddleURL){
-    let retrieveURL = baseURL + retrieveSubURL;
+    let retrieveURL = baseURL.replace(":8080", "") + retrieveSubURL;
     $.ajax({
         url: retrieveURL,
         crossOrigin: true

@@ -26,97 +26,7 @@
     <!-- Page Wrapper -->
     <div id="wrapper">
       <!-- Sidebar -->
-      <ul class="navbar-nav bg-gradient-custom sidebar sidebar-dark accordion" id="accordionSidebar">
-        <!-- Sidebar - Brand -->
-        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
-          <div class="sidebar-brand-icon">
-            <i class="fab fa-opera"></i>
-          </div>
-          <div class="sidebar-brand-text mx-3">Oliot EPCIS</div>
-        </a>
-
-        <hr class="sidebar-divider" />
-
-        <div class="sidebar-heading">XML</div>
-        <li class="nav-item">
-          <a class="nav-link" href="xmlCapture.html">
-            <span>XML Capture Client</span>
-          </a>
-        </li>
-        <li class="nav-item active">
-          <a class="nav-link" href="xmlSingleCapture.html">
-            <span>XML Capture Client (single)</span>
-          </a>
-        </li>
-
-        <hr class="sidebar-divider" />
-
-        <div class="sidebar-heading">SOAP</div>
-        <li class="nav-item">
-          <a class="nav-link" href="soapQuery.html">
-            <span>SOAP Query Client</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="soapSubscribe.html">
-            <span>SOAP Subscription Client</span>
-          </a>
-        </li>
-
-        <hr class="sidebar-divider" />
-
-        <div class="sidebar-heading">JSON</div>
-        <li class="nav-item">
-          <a class="nav-link" href="jsonCapture.html">
-            <span>JSON Capture Client</span>
-          </a>
-        </li>
-
-        <hr class="sidebar-divider" />
-
-        <div class="sidebar-heading">REST</div>
-        <li class="nav-item">
-          <a class="nav-link" href="restQuery.html">
-            <span>REST Event Query Client</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="restSubscribe.html">
-            <span>REST Event Subscribe Client</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="restSubscribe.html">
-            <span>REST Event Subscribe Client</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="restMDQuery.html">
-            <span>REST Master Data Query Client</span>
-          </a>
-        </li>
-
-        <hr class="sidebar-divider" />
-
-        <div class="sidebar-heading">FoodKoach</div>
-        <li class="nav-item">
-          <a class="nav-link" href="soapQuery.html">
-            <span>FoodKoach Capture Service</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="soapSubscribe.html">
-            <span>FoodKoach NutriScore</span>
-          </a>
-        </li>
-
-        <!-- Divider -->
-        <hr class="sidebar-divider d-none d-md-block" />
-
-        <!-- Sidebar Toggler (Sidebar) -->
-        <div class="text-center d-none d-md-inline">
-          <button class="rounded-circle border-0" id="sidebarToggle"></button>
-        </div>
+      <ul id="sidebar" class="navbar-nav bg-gradient-custom sidebar sidebar-dark accordion" id="accordionSidebar">
       </ul>
 
       <!-- Content Wrapper -->
@@ -261,7 +171,7 @@
                     <span class="m-0 font-weight-bold text-custom text-lg">
                       Document Capture
                     </span>
-                    <button type="button" class="btn btn-info ml-auto" onclick="capture()">Capture</button>
+                    <button type="button" class="btn btn-info ml-auto" onclick="singleCapture()">Capture</button>
                 </div>
                 <div class="card-body text-gray-800">
                     <div class="col">
@@ -275,46 +185,7 @@
         </div>
 
         <!-- Footer -->
-
-        <footer class="sticky-footer bg-footer mt-4">
-          <!-- or #1a252f-->
-
-          <div class="container-fluid mb-4 text-center text-gray-100">
-            <div class="row mt-3">
-              <!-- Footer Location-->
-              <div class="col-lg-4">
-                <h4 class="h3">Location</h4>
-                <p>
-                  Daeyang AI center 604, Sejong University,
-                  <br />
-                  209 Neungdong-ro, Gwangjin-gu
-                  <br />
-                  Seoul, Republic of Korea 05006
-                </p>
-              </div>
-              <!-- Footer About Text-->
-              <div class="col-lg-4">
-                <h4 class="h3">About me</h4>
-                <p>
-                  Assistant Professor, Sejong University, Republic of Korea
-                  <br />
-                  Associate Director, Auto-ID Labs, Korea
-                </p>
-              </div>
-              <!-- Footer Social Icons-->
-              <div class="col-lg-4">
-                <h4 class="h3 mb-3">Follow me</h4>
-                <a class="btn btn-outline-light btn-social mx-1" href="#!"><i class="fas fa-building fa-lg"></i></a>
-                <a class="btn btn-outline-light btn-social mx-1" href="#!"><i class="fab fa-github fa-lg"></i></a>
-              </div>
-            </div>
-          </div>
-
-          <div class="container mb-2">
-            <div class="copyright text-center my-auto">
-              <span class="text-gray-100">Copyright &copy; 2020-2022 Jaewook Byun all rights reserved.</span>
-            </div>
-          </div>
+        <footer id="footer" class="sticky-footer bg-footer mt-4">
         </footer>
         <!-- End of Footer -->
       </div>
@@ -330,10 +201,24 @@
     <!-- Custom scripts for all pages-->
     <script src="js/sb-admin-2.min.js"></script>
 
+    <!-- Load Sidebar & Footer -->
+    <script type="text/javascript">
+        $("#sidebar").load("sidebar.html", () => {
+            $("#sidebarToggle").click(function(e) {
+                e.preventDefault();
+                $("body").toggleClass("sidebar-toggled");
+                $(".sidebar").toggleClass("toggled");
+                if ($(".sidebar").hasClass("toggled")) {
+                    $(".sidebar .collapse").collapse("hide");
+                }
+            });
+            $("#xmlSingleCaptureItem").addClass("active");
+        });
+        $("#footer").load("footer.html");
+    </script> 
     
     <script src="js/modules.js"></script>
     <script defer>
-        let captureBaseURL = "";
         let validationURL = "";
         let captureURL = "";
 
@@ -343,19 +228,18 @@
         let editor_details;
 
         $.ajax({
-          url: baseURL + "/stats",
+          url: baseURL + "/statistics",
           crossOrigin: true,
         }).done((result) => {
-          captureBaseURL = result.xmlCaptureBase.replace("dfpl.sejong.ac.kr", "127.0.0.1");  // @@@@@@@@@@@@@@@ 수정
-          validationURL = captureBaseURL + "/validation";
-          captureURL = captureBaseURL + "/events";
+          validationURL = baseURL + "/validation";
+          captureURL = baseURL + "/events";
 
           $(document).ready(() => {
             editor = initEditor("textArea");
 
             // Connection to the server
-            serverConn(captureBaseURL, "/events");
-            setInterval(serverConn, 2000, captureBaseURL, "/events");
+            serverConn(baseURL, "/events");
+            setInterval(serverConn, 2000, baseURL, "/events");
 
             // Retrieve examples
             retrieveExamples(retrieveSubURL = "/xmlsinglecapture/examples", exampleMiddleURL = "/example/capture-xml-single");
