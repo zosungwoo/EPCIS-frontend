@@ -55,7 +55,7 @@ function resetDB() {
     
   }
 
-function capture() {
+function capture(format) {
     let captureString = editor.getValue();
 
     $.ajax({
@@ -127,7 +127,7 @@ function capture() {
     });
 }
 
-function singleCapture() {
+function singleCapture(format) {
     let captureString = editor.getValue();
 
     $.ajax({
@@ -147,25 +147,38 @@ function singleCapture() {
     });
 }
 
-function loadExample(btn) {
+function loadExample(btn, format) {
     $('#textArea').load(btn.id, () => {
         editor.setValue($('#textArea').val());
-        strs = editor.getValue().split("\n");
-        re = /<([a-zA-Z]+Event)>/g;
+        if(format === 'xml'){
+            strs = editor.getValue().split("\n");
+            re = /<([a-zA-Z]+Event)>/g;
 
-        // Fold events and vocabularies
-        for(let i=0;i<strs.length;i++){
-            if(strs[i].search(re) != -1 || strs[i].search("<VocabularyElementList>") != -1)
-                editor.foldCode(CodeMirror.Pos(i, 0));
+            // Fold events and vocabularies
+            for(let i=0;i<strs.length;i++){
+                if(strs[i].search(re) != -1 || strs[i].search("<VocabularyElementList>") != -1)
+                    editor.foldCode(CodeMirror.Pos(i, 0));
+            }
         }
+        else{
+            strs = editor.getValue().split("\n");
+
+            // Fold events and vocabularies
+            for(let i=0;i<strs.length;i++){
+                if(strs[i].search("eventList") != -1 || strs[i].search("vocabularyElementList") != -1)
+                    editor.foldCode(CodeMirror.Pos(i, 0));
+            }
+        }
+
+
+        isValid(format);
     
-        isValid();
     });
 
     $('#exampleModal').modal('hide');
 }
 
-function isValid() {
+function isValid(format) {
     $.ajax({
         type: "POST",
         url: validationURL,
@@ -187,7 +200,7 @@ function isValid() {
     });
 }
 
-function initEditor(id, readonly = false, size = 535){
+function initEditor(id, format, readonly = false, size = 535){
     let textAreaMode;
     if(format === "json")
         textAreaMode = "ld+json";
@@ -197,7 +210,7 @@ function initEditor(id, readonly = false, size = 535){
     let editor = CodeMirror.fromTextArea(document.getElementById(id), {
         matchBrackets: true,
         autoCloseBrackets: true,
-        mode: "application/" + format,
+        mode: "application/" + textAreaMode,
         lineNumbers: true,
         indentUnit: 4,
         theme: 'eclipse',
@@ -210,14 +223,14 @@ function initEditor(id, readonly = false, size = 535){
     // Catch paste event
     editor.getWrapperElement().addEventListener('paste', function(e) {
         if (!e.clipboardData) return;
-        isValid();
+        isValid(format);
     });
 
     return editor;
 }
 
 // Retrieve examples
-function retrieveExamples(retrieveSubURL, exampleMiddleURL){
+function retrieveExamples(retrieveSubURL, exampleMiddleURL, format){
     let retrieveURL = baseURL.replace(":8080", "") + retrieveSubURL;
     $.ajax({
         url: retrieveURL,
@@ -228,7 +241,7 @@ function retrieveExamples(retrieveSubURL, exampleMiddleURL){
     
             $.each(value, (subIdx, subVal) => {
                 if(subVal != ""){
-                    tr += "<button class=\"btn btn-outline-dark btn-sm mb-2\" id=\"/epcis/home" + exampleMiddleURL + "/" + key + "/" + subVal + "\" type=\"button\" onclick=\"loadExample(this, editor)\">" + subVal + "</button><br>"
+                    tr += "<button class=\"btn btn-outline-dark btn-sm mb-2\" id=\"/epcis/home" + exampleMiddleURL + "/" + key + "/" + subVal + "\" type=\"button\" onclick=\"loadExample(this, \'" + format + "\')\">" + subVal + "</button><br>"
                 }
             })
             tr += "</td></tr>";

@@ -17,6 +17,7 @@
 
     <script type="text/javascript" src="codemirror/lib/codemirror.js"></script>
     <script type="text/javascript" src="codemirror/mode/xml/xml.js"></script>
+	  <script type="text/javascript" src="codemirror/mode/javascript/javascript.js"></script>
     <script type="text/javascript" src="codemirror/addon/fold/foldcode.js"></script>
     <script type="text/javascript" src="codemirror/addon/fold/foldgutter.js"></script>
     <script type="text/javascript" src="codemirror/addon/fold/brace-fold.js"></script>
@@ -26,7 +27,7 @@
     <link rel="stylesheet" type="text/css" href="codemirror/lib/codemirror.css"></link>
     <link rel="stylesheet" type="text/css" href="codemirror/theme/eclipse.css"></link>
     <link rel="stylesheet" type="text/css" href="codemirror/addon/fold/foldgutter.css" />
-    
+
   </head>
 
   <body id="page-top">
@@ -166,7 +167,7 @@
                   <span class="m-0 font-weight-bold text-custom text-lg">
                     Validation Service 
                     </span>
-                    <button id="val" class="btn btn-success ml-auto" onclick="isValid()">Validate</button>
+                    <button id="val" class="btn btn-success ml-auto" onclick="isValid('json')">Validate</button>
                 </div>
                 <div class="card-body text-gray-800">
                     <textarea id="docValResp" class="form-control auto-text-area" rows="6" disabled placeholder="The validation result against EPCISDocument schema. This service will be invoked after loading an example in a dropdown menu or clicking 'isValid' button."></textarea>
@@ -177,7 +178,7 @@
                     <span class="m-0 font-weight-bold text-custom text-lg">
                       Document Capture
                     </span>
-                    <button type="button" class="btn btn-info ml-auto" onclick="capture()">Capture</button>
+                    <button type="button" class="btn btn-info ml-auto" onclick="capture('json')">Capture</button>
                 </div>
                 <div class="card-body text-gray-800 align-items-center d-flex pr-sm-0">
                     <div class="col-lg-9 mr-2">
@@ -253,7 +254,6 @@
         let captureURL = "";
 
         // codemirror
-        let format = "xml";
         let editor;
         let editor_details;
 
@@ -265,15 +265,15 @@
           captureURL = baseURL + "/capture";
 
           $(document).ready(() => {
-            editor = initEditor("textArea");
-            editor_details = initEditor("details", readonly=true);
+            editor = initEditor("textArea", 'json');
+            editor_details = initEditor("details", 'xml', readonly=true);
 
             // Connection to the server
             serverConn(baseURL, "/capture");
             setInterval(serverConn, 2000, baseURL, "/capture");
 
             // Retrieve examples
-            retrieveExamples(retrieveSubURL = "/capture/examples", exampleMiddleURL = "/example/capture");
+            retrieveExamples(retrieveSubURL = "/jsoncapture/examples", exampleMiddleURL = "/example/capture-json", 'json');
           });
         });
     </script>

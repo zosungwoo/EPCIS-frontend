@@ -167,7 +167,7 @@
                   <span class="m-0 font-weight-bold text-custom text-lg">
                     Validation Service 
                     </span>
-                    <button id="val" class="btn btn-success ml-auto" onclick="isValid()">Validate</button>
+                    <button id="val" class="btn btn-success ml-auto" onclick="isValid('xml')">Validate</button>
                 </div>
                 <div class="card-body text-gray-800">
                     <textarea id="docValResp" class="form-control auto-text-area" rows="6" disabled placeholder="The validation result against EPCISDocument schema. This service will be invoked after loading an example in a dropdown menu or clicking 'isValid' button."></textarea>
@@ -178,7 +178,7 @@
                     <span class="m-0 font-weight-bold text-custom text-lg">
                       Document Capture
                     </span>
-                    <button type="button" class="btn btn-info ml-auto" onclick="capture()">Capture</button>
+                    <button type="button" class="btn btn-info ml-auto" onclick="capture('xml')">Capture</button>
                 </div>
                 <div class="card-body text-gray-800 align-items-center d-flex pr-sm-0">
                     <div class="col-lg-9 mr-2">
@@ -254,7 +254,6 @@
         let captureURL = "";
 
         // codemirror
-        let format = "xml";
         let editor;
         let editor_details;
 
@@ -266,15 +265,15 @@
           captureURL = baseURL + "/capture";
 
           $(document).ready(() => {
-            editor = initEditor("textArea");
-            editor_details = initEditor("details", readonly=true);
+            editor = initEditor("textArea", 'xml');
+            editor_details = initEditor("details", 'xml', readonly=true);
 
             // Connection to the server
             serverConn(baseURL, "/capture");
             setInterval(serverConn, 2000, baseURL, "/capture");
 
             // Retrieve examples
-            retrieveExamples(retrieveSubURL = "/capture/examples", exampleMiddleURL = "/example/capture");
+            retrieveExamples(retrieveSubURL = "/capture/examples", exampleMiddleURL = "/example/capture", 'xml');
           });
         });
     </script>

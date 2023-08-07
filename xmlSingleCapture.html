@@ -26,7 +26,7 @@
     <link rel="stylesheet" type="text/css" href="codemirror/lib/codemirror.css"></link>
     <link rel="stylesheet" type="text/css" href="codemirror/theme/eclipse.css"></link>
     <link rel="stylesheet" type="text/css" href="codemirror/addon/fold/foldgutter.css" />
-    
+
   </head>
 
   <body id="page-top">
@@ -167,7 +167,7 @@
                   <span class="m-0 font-weight-bold text-custom text-lg">
                     Validation Service 
                     </span>
-                    <button id="val" class="btn btn-success ml-auto" onclick="isValid()">Validate</button>
+                    <button id="val" class="btn btn-success ml-auto" onclick="isValid('xml')">Validate</button>
                 </div>
                 <div class="card-body text-gray-800">
                     <textarea id="docValResp" class="form-control auto-text-area" rows="6" disabled placeholder="The validation result against EPCISDocument schema. This service will be invoked after loading an example in a dropdown menu or clicking 'isValid' button."></textarea>
@@ -178,7 +178,7 @@
                     <span class="m-0 font-weight-bold text-custom text-lg">
                       Document Capture
                     </span>
-                    <button type="button" class="btn btn-info ml-auto" onclick="singleCapture()">Capture</button>
+                    <button type="button" class="btn btn-info ml-auto" onclick="singleCapture('xml')">Capture</button>
                 </div>
                 <div class="card-body text-gray-800">
                     <div class="col">
@@ -230,7 +230,6 @@
         let captureURL = "";
 
         // codemirror
-        let format = "xml";
         let editor;
         let editor_details;
 
@@ -242,14 +241,14 @@
           captureURL = baseURL + "/events";
 
           $(document).ready(() => {
-            editor = initEditor("textArea");
+            editor = initEditor("textArea", 'xml');
 
             // Connection to the server
             serverConn(baseURL, "/events");
             setInterval(serverConn, 2000, baseURL, "/events");
 
             // Retrieve examples
-            retrieveExamples(retrieveSubURL = "/xmlsinglecapture/examples", exampleMiddleURL = "/example/capture-xml-single");
+            retrieveExamples(retrieveSubURL = "/xmlsinglecapture/examples", exampleMiddleURL = "/example/capture-xml-single", 'xml');
           })
         })
     </script>
