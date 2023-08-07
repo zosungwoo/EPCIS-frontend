@@ -38,8 +38,14 @@ function resetDB() {
             url: baseURL + "/statistics",
             crossOrigin: true,
         }).done((result) => {
-            $("#eventCount").html(result.numOfEvents);
-            $("#vocabularyCount").html(result.numOfVocabularies);
+            $("#numOfEvents").html(result.numOfEvents);
+            $("#numOfVocabularies").html(result.numOfVocabularies);
+            $("#epcs").html(result.epcs);
+            $("#bizSteps").html(result.bizSteps);
+            $("#bizLocations").html(result.bizLocations);
+            $("#readPoints").html(result.readPoints);
+            $("#dispositions").html(result.dispositions);
+            $("#eventTypes").html(result.eventTypes);
         })
         $("#resetIcon").removeClass("fa-spin");
     }, 5000);
@@ -144,6 +150,15 @@ function singleCapture() {
 function loadExample(btn) {
     $('#textArea').load(btn.id, () => {
         editor.setValue($('#textArea').val());
+        strs = editor.getValue().split("\n");
+        re = /<([a-zA-Z]+Event)>/g;
+
+        // Fold events and vocabularies
+        for(let i=0;i<strs.length;i++){
+            if(strs[i].search(re) != -1 || strs[i].search("<VocabularyElementList>") != -1)
+                editor.foldCode(CodeMirror.Pos(i, 0));
+        }
+    
         isValid();
     });
 
@@ -182,10 +197,12 @@ function initEditor(id, readonly = false, size = 535){
     let editor = CodeMirror.fromTextArea(document.getElementById(id), {
         matchBrackets: true,
         autoCloseBrackets: true,
-        mode: "application/" + textAreaMode,
+        mode: "application/" + format,
         lineNumbers: true,
         indentUnit: 4,
         theme: 'eclipse',
+        foldGutter: true,
+        gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
         readOnly: readonly
     });
     editor.setSize(null, size);

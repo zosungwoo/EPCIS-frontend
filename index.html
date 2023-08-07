@@ -179,59 +179,6 @@
 
             <div class="col-lg-4">
               <div class="card shadow mb-4">
-                <div class="card-header">
-                  <h6 class="m-0 font-weight-bold text-custom text-lg">
-                    <i class="fas fa-database"></i>
-                    Repository Status
-                  </h6>
-                </div>
-                <div class="card-body">
-                  <div class="row mb-4">
-                    <div class="col">
-                      <div class="card border-left-primary shadow h-100 py-2">
-                        <div class="card-body">
-                          <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                              <div class="text-m font-weight-bold text-primary text-uppercase mb-1">
-                                Event
-                              </div>
-                              <div id="eventCount" class="h2 mb-0 font-weight-bold text-gray-800">
-                                -
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col">
-                      <div class="card border-left-success shadow h-100 py-2">
-                        <div class="card-body">
-                          <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                              <div class="text-m font-weight-bold text-success text-uppercase mb-1">
-                                Vocabulary
-                              </div>
-                              <div id="vocabularyCount" class="h2 mb-0 font-weight-bold text-gray-800">
-                                -
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row ml-auto">
-                    <a href="javascript:void(0);" onclick="resetDB();" class="btn btn-danger btn-icon-split ml-auto">
-                      <span class="icon text-white-50">
-                        <i id="resetIcon" class="fas fa-sync-alt"></i>
-                      </span>
-                      <span class="text">Reset</span>
-                    </a>
-                  </div>
-                </div>
-              </div>
-
-              <div class="card shadow mb-4">
                 <div class="card-header py-3">
                   <h6 class="m-0 font-weight-bold text-custom text-lg">
                     <i class="fas fa-server"></i>
@@ -254,6 +201,156 @@
                   </div>
                 </div>
               </div>
+
+              <div class="card shadow mb-4">
+                <div class="card-header align-items-center d-flex">
+                  <span class="m-0 font-weight-bold text-custom text-lg">
+                    <i class="fas fa-database"></i>
+                    Repository Status
+                  </span>
+                  <button type="button" class="btn btn-danger btn-icon-split ml-auto" onclick="resetDB()">
+                    <span class="icon text-white-50">
+                      <i id="resetIcon" class="fas fa-sync-alt"></i>
+                    </span>
+                    <span class="text">Reset</span>
+                  </button>
+
+                </div>
+                <div class="card-body">
+                  <div class="row mb-4">
+                    <div class="col">
+                      <div class="card border-left-primary shadow h-100 py-2">
+                        <div class="card-body">
+                          <div class="row no-gutters">
+                            <div class="col-lg-10 align-items-center">
+                              <div class="text-m font-weight-bold text-primary text-uppercase mb-1">
+                                Event
+                              </div>
+                              <div id="numOfEvents" class="h2 mb-0 font-weight-bold text-gray-800"> - </div>
+                            </div>
+                            <div class="col-lg-2 d-flex flex-column justify-content-end">
+                              <a href="events.html" class="btn btn-secondary btn-circle btn-sm">
+                                <i class="fas fa-arrow-right"></i>
+                              </a>
+                            </div>
+                          </div>
+                          
+
+
+
+                          
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="card border-left-primary shadow h-100 py-2">
+                        <div class="card-body">
+                          <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                              <div class="text-m font-weight-bold text-primary text-uppercase mb-1">
+                                Vocabulary
+                              </div>
+                              <div id="numOfVocabularies" class="h2 mb-0 font-weight-bold text-gray-800"> - </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row mb-4">
+                    <div class="col">
+                      <div class="card border-left-success shadow h-100 py-2">
+                        <div class="card-body">
+                          <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                              <div class="text-m font-weight-bold text-success text-uppercase mb-1">
+                                EPC
+                              </div>
+                              <div id="epcs" class="h2 mb-0 font-weight-bold text-gray-800"> - </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="card border-left-success shadow h-100 py-2">
+                        <div class="card-body">
+                          <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                              <div class="text-m font-weight-bold text-success text-uppercase mb-1">
+                                Buisness Step
+                              </div>
+                              <div id="bizSteps" class="h2 mb-0 font-weight-bold text-gray-800"> - </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row mb-4">
+                    <div class="col">
+                      <div class="card border-left-info shadow h-100 py-2">
+                        <div class="card-body">
+                          <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                              <div class="text-m font-weight-bold text-info text-uppercase mb-1">
+                                Buisness Location
+                              </div>
+                              <div id="bizLocations" class="h2 mb-0 font-weight-bold text-gray-800"> - </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="card border-left-info shadow h-100 py-2">
+                        <div class="card-body">
+                          <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                              <div class="text-m font-weight-bold text-info text-uppercase mb-1">
+                                Read Point
+                              </div>
+                              <div id="readPoints" class="h2 mb-0 font-weight-bold text-gray-800"> - </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row mb-4">
+                    <div class="col">
+                      <div class="card border-left-dark shadow h-100 py-2">
+                        <div class="card-body">
+                          <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                              <div class="text-m font-weight-bold text-dark text-uppercase mb-1">
+                                Disposition
+                              </div>
+                              <div id="dispositions" class="h2 mb-0 font-weight-bold text-gray-800"> - </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="card border-left-dark shadow h-100 py-2">
+                        <div class="card-body">
+                          <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                              <div class="text-m font-weight-bold text-dark text-uppercase mb-1">
+                                Event Type
+                              </div>
+                              <div id="eventTypes" class="h2 mb-0 font-weight-bold text-gray-800"> - </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              
             </div>
           </div>
         </div>
@@ -305,8 +402,14 @@
         // baseURLs.restSubscribeBaseURL = result.restSubscribeBase;
 
         $(document).ready(() => {
-          $("#eventCount").html(result.numOfEvents);
-          $("#vocabularyCount").html(result.numOfVocabularies);
+          $("#numOfEvents").html(result.numOfEvents);
+          $("#numOfVocabularies").html(result.numOfVocabularies);
+          $("#epcs").html(result.epcs);
+          $("#bizSteps").html(result.bizSteps);
+          $("#bizLocations").html(result.bizLocations);
+          $("#readPoints").html(result.readPoints);
+          $("#dispositions").html(result.dispositions);
+          $("#eventTypes").html(result.eventTypes);
 
           // Connection to the server
           serverConn(baseURL);
