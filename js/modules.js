@@ -56,12 +56,10 @@ function resetDB() {
   }
 
 function capture(format) {
-    let captureString = editor.getValue();
-
     $.ajax({
         type: "POST",
         url: captureURL,
-        data: captureString,
+        data: editor.getValue(),
         contentType: "application/" + format + "; charset=utf-8",
         crossOrigin: true,
         beforeSend: function (xhr) {
@@ -122,18 +120,22 @@ function capture(format) {
             }, 1000);
         }, 500);
     }).fail((result) => {
-        $("#resp").val("Fail with capture ID: " + result.responseText).hide().fadeIn('slow');
+        result = formatXml(result.responseText);
+        $("#resp").val("Fail with " + result).hide().fadeIn('slow');
         $("#status").removeClass("text-success text-warning text-danger").addClass("text-secondary");
+        $("#details").val(formatXml(result));
+        editor_details.setValue(result);
+        $('#detailsModal').on('shown.bs.modal', function() {
+            editor_details.refresh();
+        });
     });
 }
 
 function singleCapture(format) {
-    let captureString = editor.getValue();
-
     $.ajax({
         type: "POST",
         url: captureURL,
-        data: captureString,
+        data: editor.getValue(),
         contentType: "application/" + format + "; charset=utf-8",
         crossOrigin: true,
         beforeSend: function (xhr) {
@@ -147,7 +149,25 @@ function singleCapture(format) {
     });
 }
 
-function loadExample(btn, format) {
+function query(){
+    $.ajax({
+        type: "POST",
+        url: queryURL,
+        data: editor.getValue(),
+        contentType: "application/xml; charset=utf-8",
+        crossOrigin: true
+    }).done((result) => {
+        let xmlString = formatXml(new XMLSerializer().serializeToString(result));
+        $("#queryResp").val(xmlString);
+        editor_resp.setValue(xmlString);
+    }).fail((result) => {
+        result = formatXml(result.responseText);
+        $("#queryResp").val(result);
+        editor_resp.setValue(result);
+    });
+}
+
+function loadExample(btn, format, valid=true) {
     $('#textArea').load(btn.id, () => {
         editor.setValue($('#textArea').val());
         if(format === 'xml'){
@@ -169,14 +189,21 @@ function loadExample(btn, format) {
                     editor.foldCode(CodeMirror.Pos(i, 0));
             }
         }
-
-
-        isValid(format);
-    
+        if(valid)
+            isValid(format);
     });
 
     $('#exampleModal').modal('hide');
 }
+
+// SOAP templates
+// function loadTemplate(btn, format='xml') {
+//     $('#textArea').load(btn.id, function() {
+//         editor.setValue($('#textArea').val());
+//     });
+
+//     $('#exampleModal').modal('hide');
+// }
 
 function isValid(format) {
     $.ajax({
@@ -219,18 +246,11 @@ function initEditor(id, format, readonly = false, size = 535){
         readOnly: readonly
     });
     editor.setSize(null, size);
-    
-    // Catch paste event
-    editor.getWrapperElement().addEventListener('paste', function(e) {
-        if (!e.clipboardData) return;
-        isValid(format);
-    });
-
     return editor;
 }
 
 // Retrieve examples
-function retrieveExamples(retrieveSubURL, exampleMiddleURL, format){
+function retrieveExamples(retrieveSubURL, exampleMiddleURL, format, valid=true){
     let retrieveURL = baseURL.replace(":8080", "") + retrieveSubURL;
     $.ajax({
         url: retrieveURL,
@@ -241,7 +261,7 @@ function retrieveExamples(retrieveSubURL, exampleMiddleURL, format){
     
             $.each(value, (subIdx, subVal) => {
                 if(subVal != ""){
-                    tr += "<button class=\"btn btn-outline-dark btn-sm mb-2\" id=\"/epcis/home" + exampleMiddleURL + "/" + key + "/" + subVal + "\" type=\"button\" onclick=\"loadExample(this, \'" + format + "\')\">" + subVal + "</button><br>"
+                    tr += "<button class=\"btn btn-outline-dark btn-sm mb-2\" id=\"/epcis/home" + exampleMiddleURL + "/" + key + "/" + subVal + "\" type=\"button\" onclick=\"loadExample(this, \'" + format + "\', " + valid + ")\">" + subVal + "</button><br>"
                 }
             })
             tr += "</td></tr>";
