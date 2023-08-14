@@ -196,15 +196,6 @@ function loadExample(btn, format, valid=true) {
     $('#exampleModal').modal('hide');
 }
 
-// SOAP templates
-// function loadTemplate(btn, format='xml') {
-//     $('#textArea').load(btn.id, function() {
-//         editor.setValue($('#textArea').val());
-//     });
-
-//     $('#exampleModal').modal('hide');
-// }
-
 function isValid(format) {
     $.ajax({
         type: "POST",

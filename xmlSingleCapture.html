@@ -227,31 +227,23 @@
     
     <script src="js/modules.js"></script>
     <script defer>
-        let validationURL = "";
-        let captureURL = "";
+        validationURL = baseURL + "/validation";
+        captureURL = baseURL + "/events";
 
         // codemirror
         let editor;
         let editor_details;
 
-        $.ajax({
-          url: baseURL + "/statistics",
-          crossOrigin: true,
-        }).done((result) => {
-          validationURL = baseURL + "/validation";
-          captureURL = baseURL + "/events";
+        $(document).ready(() => {
+          editor = initEditor("textArea", 'xml');
 
-          $(document).ready(() => {
-            editor = initEditor("textArea", 'xml');
+          // Connection to the server
+          serverConn(baseURL, "/events");
+          setInterval(serverConn, 2000, baseURL, "/events");
 
-            // Connection to the server
-            serverConn(baseURL, "/events");
-            setInterval(serverConn, 2000, baseURL, "/events");
-
-            // Retrieve examples
-            retrieveExamples(retrieveSubURL = "/xmlsinglecapture/examples", exampleMiddleURL = "/example/capture-xml-single", 'xml');
-          })
-        })
+          // Retrieve examples
+          retrieveExamples(retrieveSubURL = "/xmlsinglecapture/examples", exampleMiddleURL = "/example/capture-xml-single", 'xml');
+        });
     </script>
   </body>
 </html>

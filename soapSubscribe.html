@@ -4,10 +4,10 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content=""  />
+    <meta name="description" content="" />
     <meta name="author" content="" />
 
-    <title>Oliot EPCIS - XML Capture</title>
+    <title>Oliot EPCIS - SOAP Subscribe</title>
 
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css" />
@@ -43,19 +43,19 @@
           <div class="bg-header pt-4 pb-10">
             <div class="pt-4 px-5">
               <h1 class="h1 text-gray-100 font-weight-bold mb-4">
-                XML Capture Client
+                SOAP Subscribe Client
               </h1>
 
               <div class="text-gray-100">
                 <p>
-                    This page enables you to learn and use EPCIS capture interface.
+                    This page enables you to learn and use EPCIS query interface.
                 </p>
               </div>
             </div>
           </div>
 
           <div class="row mt-n8 px-5">
-            <div class="col-lg-8">
+            <div class="col-lg-6">
                 <div class="card shadow mb-4">
                     <div class="card-header py-3 align-items-center d-flex">
                         <h6 class="m-0 font-weight-bold text-custom text-lg">
@@ -82,18 +82,30 @@
                                                 </thead>
                                                 <tbody>
                                                     <tr class="odd">
-                                                      <td class="font-weight-bold h5">Capture</td>
+                                                      <td class="font-weight-bold h5">
+                                                        <p>Subscribe</p>
+                                                        <p>GetStandardVersion</p>
+                                                        <p>GetVendorVersion</p>
+                                                        <p>GetQueryNames</p>
+                                                      </td>
                                                       <td>
-                                                          This service allows you to store your EPCIS Document into your backend storage <br>
-                                                          <em>Note: use /vocabularyCapture for epcis:EPCISMasterDataDocument</em> <br> <br>
-                                                          <b>Method</b>: POST <br>
-                                                          <b>Contents</b>: application/xml, complying with <a href="./schema/EPCglobal-epcis-2_0.xsd">EPCIS v2.0 XML Schema</a> <br> <br>
-                                                          How to use: <br>
-                                                          <ul>
-                                                              <li>Load an example in a dropdown menu or Copy/paste your own EPCIS document into a textbox</li>
-                                                              <li>See the validation result against EPCISDocument schema</li>
-                                                              <li>You can even capture the valid document by clicking a capture button</li>
-                                                          </ul>
+                                                        The services usable in this page allow providing query results. <br>
+                                                        <ul>
+                                                            <li>Subscribe: Register a subscriber monitoring a group of events matched with specific criteria. The subscriber delivers such events to a specific callback point periodically or as soon as such event is captured.</li>
+                                                            <li>Unsubscribe: Unregister a subscriber.</li>
+                                                            <li>GetSubscriptionIDs: Get all the identifiers of the registered subscriptions.</li>
+                                                            <li>GetStandardVersion: Return the standard version of EPCIS</li>
+                                                            <li>GetVendorVersion: Return the vendor specific version of EPCIS</li>
+                                                            <li>GetQueryNames: Return a list of all query names available</li>
+                                                        </ul>
+                                                        <em>Note: Poll is supported in the other module.</em> <br> <br>
+                                                        <b>Method</b>: POST <br>
+                                                        <b>Contents</b>: application/xml, complying with EPCIS WSDL <br> <br>
+                                                        How to use: <br>
+                                                        <ul>
+                                                        <li>Load an example in a dropdown menu or Copy/paste/text your own EPCIS query into a textbox</li>
+                                                        <li>Click 'Query' and See the results</li>
+                                                        </ul>
                                                       </td>
                                                     </tr>
                                                   </tbody>
@@ -103,7 +115,7 @@
                                 </div>
                             </div>
 
-                            <button class="btn btn-secondary ml-2" type="button" data-toggle="modal" data-target="#exampleModal">Load an Example</button>
+                            <button class="btn btn-secondary ml-2" type="button" data-toggle="modal" data-target="#exampleModal">Load an example</button>
 
                             <div class="modal fade" id="exampleModal" role="dialog">
                                 <div class="modal-dialog modal-lg modal-dialog-scrollable">
@@ -128,10 +140,11 @@
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                       </div>
 
-                      <div class="card-body p-0">   
+                      <div class="card-body p-0">
                         <textarea id="textArea" class="form-control auto-text-area"></textarea>
                       </div>
                 </div>
@@ -139,12 +152,12 @@
 
             
 
-            <div class="col-lg-4">
+            <div class="col-lg-6">
               <div class="card shadow mb-4">
                 <div class="card-header py-3">
                   <h6 class="m-0 font-weight-bold text-custom text-lg">
                     <i class="fas fa-server"></i>
-                    Capture Service Endpoint
+                    Subscribe Service Endpoint
                   </h6>
                 </div>
                 <div class="card-body text-gray-800">
@@ -152,7 +165,7 @@
                     <div class="d-flex align-items-center">
                       <i class="fa fa-building fa-lg mr-4"></i>
                       <div class="ms-4">
-                        <div>XML Capture Server</div>
+                        <div>SOAP Subscribe Server</div>
                         <div id="serverEndpoint" class="text-xs text-muted"></div>
                       </div>
                     </div>
@@ -166,52 +179,14 @@
               <div class="card shadow mb-4">
                 <div class="card-header py-3 align-items-center d-flex">
                   <span class="m-0 font-weight-bold text-custom text-lg">
-                    Validation Service 
+                    Query Response 
                     </span>
-                    <button id="val" class="btn btn-success ml-auto" onclick="isValid('xml')">Validate</button>
+                    <button id="val" class="btn btn-info ml-auto" onclick="query()">Query</button>
                 </div>
-                <div class="card-body text-gray-800">
-                    <textarea id="docValResp" class="form-control auto-text-area" rows="6" disabled placeholder="The validation result against EPCISDocument schema. This service will be invoked after loading an example in a dropdown menu or clicking 'isValid' button."></textarea>
+                <div class="card-body p-0">
+                    <textarea id="queryResp" class="form-control auto-text-area"></textarea>
                 </div>
               </div>
-              <div class="card shadow mb-4">
-                <div class="card-header py-3 align-items-center d-flex">
-                    <span class="m-0 font-weight-bold text-custom text-lg">
-                      Document Capture
-                    </span>
-                    <button type="button" class="btn btn-info ml-auto" onclick="capture('xml')">Capture</button>
-                </div>
-                <div class="card-body text-gray-800 align-items-center d-flex pr-sm-0">
-                    <div class="col-lg-9 mr-2">
-                        <input id="resp" type="text" class="form-control" disabled placeholder="Response of Capture">
-                    </div>
-                    <div class="col-lg-3">
-                        <i class="fas fa-ellipsis-h text-secondary"></i> &nbsp;
-                        <i id="status" class="fa fa-circle text-secondary fa-lg animated--fade-in"></i>
-
-                        
-                        <button class="btn btn-secondary btn-circle btn-xs mt-nc p-0" type="button" data-toggle="modal" data-target="#detailsModal">
-                          <i class="fas fa-info-circle fa-lg"></i>
-                        </button>
-  
-                        <div class="modal fade" id="detailsModal" role="dialog">
-                            <div class="modal-dialog modal-xl">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h4>View Details</h4>
-                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                    </div>
-                                    <div class="modal-body">
-                                      <textarea id="details" class="form-control auto-text-area"></textarea>
-                                      
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-              </div>
-              
             </div>
           </div>
         </div>
@@ -235,39 +210,39 @@
 
     <!-- Load Sidebar & Footer -->
     <script type="text/javascript">
-      $("#sidebar").load("sidebar.html", () => {
-          $("#sidebarToggle").click(function(e) {
-              e.preventDefault();
-              $("body").toggleClass("sidebar-toggled");
-              $(".sidebar").toggleClass("toggled");
-              if ($(".sidebar").hasClass("toggled")) {
-                  $(".sidebar .collapse").collapse("hide");
-              }
-          });
-          $("#xmlCaptureItem").addClass("active");
-      });
-      $("#footer").load("footer.html");
+        $("#sidebar").load("sidebar.html", () => {
+            $("#sidebarToggle").click(function(e) {
+                e.preventDefault();
+                $("body").toggleClass("sidebar-toggled");
+                $(".sidebar").toggleClass("toggled");
+                if ($(".sidebar").hasClass("toggled")) {
+                    $(".sidebar .collapse").collapse("hide");
+                }
+            });
+            $("#soapSubscribeItem").addClass("active");
+        });
+        $("#footer").load("footer.html");
     </script> 
+
     
     <script src="js/modules.js"></script>
     <script defer>
-        let validationURL = baseURL + "/validation";
-        let captureURL = baseURL + "/capture";
+        let queryURL = baseURL + "/query";
 
         // codemirror
         let editor;
-        let editor_details;
-        
+        let editor_resp;
+
         $(document).ready(() => {
           editor = initEditor("textArea", 'xml');
-          editor_details = initEditor("details", 'xml', readonly=true);
+          editor_resp = initEditor("queryResp", 'xml', readonly=true, size=377);
 
           // Connection to the server
-          serverConn(baseURL, "/capture");
-          setInterval(serverConn, 2000, baseURL, "/capture");
+          serverConn(baseURL, "/query");
+          setInterval(serverConn, 2000, baseURL, "/query");
 
           // Retrieve examples
-          retrieveExamples(retrieveSubURL = "/capture/examples", exampleMiddleURL = "/example/capture", 'xml');
+          retrieveExamples(retrieveSubURL = "/subscribe/examples", exampleMiddleURL = "/example/subscribe", 'xml', false);
         });
     </script>
   </body>

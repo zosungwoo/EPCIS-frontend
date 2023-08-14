@@ -251,31 +251,23 @@
     
     <script src="js/modules.js"></script>
     <script defer>
-        let validationURL = "";
-        let captureURL = "";
+        validationURL = baseURL + "/validation";
+        captureURL = baseURL + "/capture";
 
         // codemirror
         let editor;
         let editor_details;
 
-        $.ajax({
-          url: baseURL + "/statistics",
-          crossOrigin: true,
-        }).done((result) => {
-          validationURL = baseURL + "/validation";
-          captureURL = baseURL + "/capture";
+        $(document).ready(() => {
+          editor = initEditor("textArea", 'json');
+          editor_details = initEditor("details", 'xml', readonly=true);
 
-          $(document).ready(() => {
-            editor = initEditor("textArea", 'json');
-            editor_details = initEditor("details", 'xml', readonly=true);
+          // Connection to the server
+          serverConn(baseURL, "/capture");
+          setInterval(serverConn, 2000, baseURL, "/capture");
 
-            // Connection to the server
-            serverConn(baseURL, "/capture");
-            setInterval(serverConn, 2000, baseURL, "/capture");
-
-            // Retrieve examples
-            retrieveExamples(retrieveSubURL = "/jsoncapture/examples", exampleMiddleURL = "/example/capture-json", 'json');
-          });
+          // Retrieve examples
+          retrieveExamples(retrieveSubURL = "/jsoncapture/examples", exampleMiddleURL = "/example/capture-json", 'json');
         });
     </script>
   </body>

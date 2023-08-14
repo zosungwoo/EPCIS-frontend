@@ -113,7 +113,7 @@
                                 </div>
                             </div>
 
-                            <button class="btn btn-secondary ml-2" type="button" data-toggle="modal" data-target="#exampleModal">Load a template</button>
+                            <button class="btn btn-secondary ml-2" type="button" data-toggle="modal" data-target="#exampleModal">Load an example</button>
 
                             <div class="modal fade" id="exampleModal" role="dialog">
                                 <div class="modal-dialog modal-lg modal-dialog-scrollable">
@@ -155,14 +155,15 @@
                 <div class="card-header py-3">
                   <h6 class="m-0 font-weight-bold text-custom text-lg">
                     <i class="fas fa-server"></i>
-                    Capture Service Endpoint
+                    Query Service Endpoint
                   </h6>
                 </div>
                 <div class="card-body text-gray-800">
-                  <div class="d-flex align-items-center justify-content-between px-4">
+                  <div class="d-flex align-items-center justify-content-between px-3">
                     <div class="d-flex align-items-center">
+                      <i class="fa fa-building fa-lg mr-4"></i>
                       <div class="ms-4">
-                        <div class="small">XML Capture Server</div>
+                        <div>SOAP Query Server</div>
                         <div id="serverEndpoint" class="text-xs text-muted"></div>
                       </div>
                     </div>
@@ -178,7 +179,7 @@
                   <span class="m-0 font-weight-bold text-custom text-lg">
                     Query Response 
                     </span>
-                    <button id="val" class="btn btn-info ml-auto" onclick="query('xml')">Query</button>
+                    <button id="val" class="btn btn-info ml-auto" onclick="query()">Query</button>
                 </div>
                 <div class="card-body p-0">
                     <textarea id="queryResp" class="form-control auto-text-area"></textarea>
@@ -224,32 +225,23 @@
     
     <script src="js/modules.js"></script>
     <script defer>
-        let validationURL = "";
-        let captureURL = "";
+        let queryURL = baseURL + "/query";
 
         // codemirror
         let editor;
-        let editor_qr;
+        let editor_resp;
 
-        $.ajax({
-          url: baseURL + "/statistics",
-          crossOrigin: true,
-        }).done((result) => {
-          validationURL = baseURL + "/validation";
-          captureURL = baseURL + "/events";
+        $(document).ready(() => {
+          editor = initEditor("textArea", 'xml');
+          editor_resp = initEditor("queryResp", 'xml', readonly=true, size=377);
 
-          $(document).ready(() => {
-            editor = initEditor("textArea", 'xml');
-            editor_qr = initEditor("queryResp", 'xml', readonly=true, size=377);
+          // Connection to the server
+          serverConn(baseURL, "/query");
+          setInterval(serverConn, 2000, baseURL, "/query");
 
-            // Connection to the server
-            serverConn(baseURL, "/events");
-            setInterval(serverConn, 2000, baseURL, "/events");
-
-            // Retrieve examples
-            retrieveExamples(retrieveSubURL = "/query/examples", exampleMiddleURL = "/example/query", 'xml');
-          })
-        })
+          // Retrieve examples
+          retrieveExamples(retrieveSubURL = "/query/examples", exampleMiddleURL = "/example/query", 'xml', false);
+        });
     </script>
   </body>
 </html>
