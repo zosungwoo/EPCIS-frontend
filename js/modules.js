@@ -49,11 +49,29 @@ function resetDB() {
         })
         $("#resetIcon").removeClass("fa-spin");
     }, 5000);
+}
 
-    
-
-    
-  }
+function isValid(format) {
+    $.ajax({
+        type: "POST",
+        url: validationURL,
+        data: editor.getValue(),
+        contentType: "application/" + format + "; charset=utf-8",
+        crossOrigin: true
+    }).done((result) => {
+        $("#docValResp")
+            .val("Valid Document")
+            .hide()
+            .fadeIn('slow');
+    }).fail((result) => {
+        $("#docValResp")
+            .val(result.responseText)
+            .hide()
+            .fadeIn('slow');
+    }).always((result) => {
+        $("#status").removeClass("text-warning text-success text-danger Blink").addClass("text-secondary");
+    });
+}
 
 function capture(format) {
     $.ajax({
@@ -160,6 +178,9 @@ function query(){
         let xmlString = formatXml(new XMLSerializer().serializeToString(result));
         $("#queryResp").val(xmlString);
         editor_resp.setValue(xmlString);
+
+        foldEventVoca('xml', editor_resp);
+        
     }).fail((result) => {
         result = formatXml(result.responseText);
         $("#queryResp").val(result);
@@ -167,55 +188,38 @@ function query(){
     });
 }
 
-function loadExample(btn, format, valid=true) {
+// Retrieve examples
+function retrieveExamples(retrieveSubURL, exampleMiddleURL, format){
+    let retrieveURL = baseURL.replace(":8080", "") + retrieveSubURL;
+    $.ajax({
+        url: retrieveURL,
+        crossOrigin: true
+    }).done((result) => {
+        $.each(JSON.parse(result), (key, value) => {
+            let tr = "<tr><td class=\"font-weight-bold h6\">" + key + "</td><td>";
+    
+            $.each(value, (subIdx, subVal) => {
+                if(subVal != ""){
+                    tr += "<button class=\"btn btn-outline-dark btn-sm mb-2\" id=\"/epcis/home" + exampleMiddleURL + "/" + key + "/" + subVal + "\" type=\"button\" onclick=\"loadExample(this, \'" + format + "\')\">" + subVal + "</button><br>"
+                }
+            })
+            tr += "</td></tr>";
+        
+            $("#exampleBody").append(tr);
+        })
+    })
+}
+
+function loadExample(btn, format) {
     $('#textArea').load(btn.id, () => {
         editor.setValue($('#textArea').val());
-        if(format === 'xml'){
-            strs = editor.getValue().split("\n");
-            re = /<([a-zA-Z]+Event)>/g;
+        foldEventVoca(format, editor);
 
-            // Fold events and vocabularies
-            for(let i=0;i<strs.length;i++){
-                if(strs[i].search(re) != -1 || strs[i].search("<VocabularyElementList>") != -1)
-                    editor.foldCode(CodeMirror.Pos(i, 0));
-            }
-        }
-        else{
-            strs = editor.getValue().split("\n");
-
-            // Fold events and vocabularies
-            for(let i=0;i<strs.length;i++){
-                if(strs[i].search("eventList") != -1 || strs[i].search("vocabularyElementList") != -1)
-                    editor.foldCode(CodeMirror.Pos(i, 0));
-            }
-        }
-        if(valid)
+        if(typeof validationURL !== 'undefined')  // Whether to validate
             isValid(format);
     });
 
     $('#exampleModal').modal('hide');
-}
-
-function isValid(format) {
-    $.ajax({
-        type: "POST",
-        url: validationURL,
-        data: editor.getValue(),
-        contentType: "application/" + format + "; charset=utf-8",
-        crossOrigin: true
-    }).done((result) => {
-        $("#docValResp")
-            .val("Valid Document")
-            .hide()
-            .fadeIn('slow');
-    }).fail((result) => {
-        $("#docValResp")
-            .val(result.responseText)
-            .hide()
-            .fadeIn('slow');
-    }).always((result) => {
-        $("#status").removeClass("text-warning text-success text-danger Blink").addClass("text-secondary");
-    });
 }
 
 function initEditor(id, format, readonly = false, size = 535){
@@ -240,27 +244,7 @@ function initEditor(id, format, readonly = false, size = 535){
     return editor;
 }
 
-// Retrieve examples
-function retrieveExamples(retrieveSubURL, exampleMiddleURL, format, valid=true){
-    let retrieveURL = baseURL.replace(":8080", "") + retrieveSubURL;
-    $.ajax({
-        url: retrieveURL,
-        crossOrigin: true
-    }).done((result) => {
-        $.each(JSON.parse(result), (key, value) => {
-            let tr = "<tr><td class=\"font-weight-bold h6\">" + key + "</td><td>";
-    
-            $.each(value, (subIdx, subVal) => {
-                if(subVal != ""){
-                    tr += "<button class=\"btn btn-outline-dark btn-sm mb-2\" id=\"/epcis/home" + exampleMiddleURL + "/" + key + "/" + subVal + "\" type=\"button\" onclick=\"loadExample(this, \'" + format + "\', " + valid + ")\">" + subVal + "</button><br>"
-                }
-            })
-            tr += "</td></tr>";
-        
-            $("#exampleBody").append(tr);
-        })
-    })
-}
+
 
 function formatXml(xml) {
     var formatted = '';
@@ -291,4 +275,27 @@ function formatXml(xml) {
     });
 
     return formatted;
+}
+
+function foldEventVoca(format, editor){
+    if(format === 'xml'){
+        let strs = editor.getValue().split("\n");
+        const re_event = /<([a-zA-Z]+Event)>/;
+        const re_voca = /<VocabularyElementList>/;
+
+        // Fold events and vocabularies
+        for(let i=0;i<strs.length;i++){
+            if(strs[i].search(re_event) !== -1 || strs[i].search(re_voca) !== -1)
+                editor.foldCode(CodeMirror.Pos(i, 0));
+        }
+    }
+    else{
+        strs = editor.getValue().split("\n");
+
+        // Fold events and vocabularies
+        for(let i=0;i<strs.length;i++){
+            if(strs[i].search("eventList") !== -1 || strs[i].search("vocabularyElementList") !== -1)
+                editor.foldCode(CodeMirror.Pos(i, 0));
+        }
+    }
 }
