@@ -178,10 +178,32 @@
               
               <div class="card shadow mb-4">
                 <div class="card-header py-3 align-items-center d-flex">
+                  
                   <span class="m-0 font-weight-bold text-custom text-lg">
                     Query Response 
-                    </span>
+                  </span>
+
+                  <div class="ml-auto">
+
+                    <button id="subResultButton" class="btn btn-secondary mr-2 " type="button" data-toggle="modal" data-target="#subResult" onclick="getSubResult();">View Subscription Result</button>
+
+                    <div class="modal fade" id="subResult" role="dialog">
+                      <div class="modal-dialog modal-xl">
+                          <div class="modal-content">
+                              <div class="modal-header">
+                                  <h4>View Subscription Result &nbsp; <i class="fa fa-spinner fa-spin"></i>
+                                  </h4>
+                                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                              </div>
+                              <div class="modal-body">
+                                <textarea id="subResultResp" class="form-control auto-text-area"></textarea>
+                              </div>
+                          </div>
+                      </div>
+                    </div>
+
                     <button id="val" class="btn btn-info ml-auto" onclick="query()">Query</button>
+                  </div>
                 </div>
                 <div class="card-body p-0">
                     <textarea id="queryResp" class="form-control auto-text-area"></textarea>
@@ -228,14 +250,18 @@
     <script src="js/modules.js"></script>
     <script defer>
         let queryURL = baseURL + "/query";
+        
+        var subId;
 
         // codemirror
         let editor;
         let editor_resp;
+        let editor_subResultResp;
 
         $(document).ready(() => {
           editor = initEditor("textArea", 'xml');
           editor_resp = initEditor("queryResp", 'xml', readonly=true, size=377);
+          editor_subResultResp = initEditor("subResultResp", 'xml');
 
           // Connection to the server
           serverConn(baseURL, "/query");

@@ -11,10 +11,9 @@
     <!-- Custom scripts for all pages-->
     <script src="js/sb-admin-2.min.js"></script>
     <script>
-        var baseURL = "http://localhots:8080/epcis/query"
+        var baseURL = "http://localhost/epcis/sub?subId=2"
 		    
-        var params = $("#subscribeParam").val() + $("#pollParam").val();
-        var url = baseURL. // replace("http", "ws"); //+ params;
+        var url = baseURL.replace("http", "ws"); //+ params;
                     
         socket = new WebSocket(url);
         
@@ -51,10 +50,10 @@
             $("#errorToast").find("strong").html("An error occured");
             $("#errorToast").find(".toast-body").html("Please check the editor to see the error message");
             // errorToast.sho???zaZZZZZZZZZZZZZZZZZZZZZZZZw();
-            if(typeof event != `undefined`)
-                jsonEditor.setValue(event.message);
-            else
-                jsonEditor.setValue("Browser probably cannot establish connection with " + url);
+            // if(typeof event != `undefined`)
+            //     jsonEditor.setValue(event.message);
+            // else
+            //     jsonEditor.setValue("Browser probably cannot establish connection with " + url);
             
             $("#pollParam").val("");
             $("button#subscribe-off-btn").removeClass("btn-info").addClass("btn-outline-info").prop("disabled", true);
@@ -63,6 +62,9 @@
     </script>
 </head>
 <body>
-    
+    <div id="responseToast">
+        <strong></strong>
+        <div class="toast-body"></div>
+    </div>
 </body>
 </html>

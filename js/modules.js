@@ -109,6 +109,7 @@ function capture(format) {
                         xhr.setRequestHeader("GS1-EPCIS-Max", "2.0.0");
                     }
                 }).done((result) => {
+                    a = result
                     let xmlString = formatXml(new XMLSerializer().serializeToString(result));
                     let running = $(result).find("ns2\\:epcisCaptureJobType").attr("running");
 
@@ -166,7 +167,7 @@ function singleCapture(format) {
         $("#resp").val(result.responseText).hide().fadeIn('slow');
     });
 }
-
+var a;
 function query(){
     $.ajax({
         type: "POST",
@@ -179,13 +180,79 @@ function query(){
         $("#queryResp").val(xmlString);
         editor_resp.setValue(xmlString);
 
-        foldEventVoca('xml', editor_resp);
+        foldEventVoca(editor_resp, 'xml');
+        
+        if($(result).find("query\\:SubscribeResult").length){
+            const parser = new DOMParser();
+            const xml = parser.parseFromString(editor.getValue(), 'application/xml');
+            subId = $(xml).find('subscriptionID').text();  // in soapSubscribe.html
+
+            $("#subResultButton").removeClass('d-none');
+        } else{
+            // 변수 기본값으로 초기화
+            $("#subResultButton").addClass('d-none');
+        }
         
     }).fail((result) => {
         result = formatXml(result.responseText);
         $("#queryResp").val(result);
         editor_resp.setValue(result);
+
+        $("#subResultButton").addClass('d-none');
     });
+}
+
+function getSubResult(){
+    const clientServerHref = window.location.href.split('/');
+    let clientServerHrefArr = href.split("/");
+    let webSocketUrl = "ws://" + hrefArr[2] + "/epcis/sub";
+
+    socket = new WebSocket(url);
+        
+////////// 이부분 수정 ///////////////
+
+    socket.onopen = function(e) {
+        $("#responseToast").find("strong").html("Connection established");
+        $("#responseToast").find(".toast-body").html("Please wait for the server to send the data.");
+        // responseToast.show();
+    };
+
+    socket.onmessage = function(event) {
+        $("#responseToast").find("strong").html("Data received from server");
+        $("#responseToast").find(".toast-body").html("Please check the editor");
+        // responseToast.show();
+        // jsonEditor.setValue(event.da1ta);
+    };
+
+    socket.onclose = function(event) {
+        if (event.wasClean) {
+            $("#responseToast").find("strong").html("Connection closed cleanly.");
+            $("#responseToast").find(".toast-body").html(event.reason);
+            // responseToast.show();
+        } else {
+            $("#responseToast").find("strong").html("Connection closed abruptly.");
+            $("#responseToast").find(".toast-body").html("Connection died");
+            // responseToast.show();
+        }
+        
+        $("#pollParam").val("");
+        $("button#subscribe-off-btn").removeClass("btn-info").addClass("btn-outline-info").prop("disabled", true);
+        $("button#subscribe-on-btn").removeClass("btn-outline-info").addClass("btn-info").prop("disabled", false);
+    };
+
+    socket.onerror = function(error) {
+        $("#errorToast").find("strong").html("An error occured");
+        $("#errorToast").find(".toast-body").html("Please check the editor to see the error message");
+        // errorToast.sho???zaZZZZZZZZZZZZZZZZZZZZZZZZw();
+        // if(typeof event != `undefined`)
+        //     jsonEditor.setValue(event.message);
+        // else
+        //     jsonEditor.setValue("Browser probably cannot establish connection with " + url);
+        
+        $("#pollParam").val("");
+        $("button#subscribe-off-btn").removeClass("btn-info").addClass("btn-outline-info").prop("disabled", true);
+        $("button#subscribe-on-btn").removeClass("btn-outline-info").addClass("btn-info").prop("disabled", false);
+    };
 }
 
 // Retrieve examples
@@ -213,7 +280,7 @@ function retrieveExamples(retrieveSubURL, exampleMiddleURL, format){
 function loadExample(btn, format) {
     $('#textArea').load(btn.id, () => {
         editor.setValue($('#textArea').val());
-        foldEventVoca(format, editor);
+        foldEventVoca(editor, format);
 
         if(typeof validationURL !== 'undefined')  // Whether to validate
             isValid(format);
@@ -223,11 +290,9 @@ function loadExample(btn, format) {
 }
 
 function initEditor(id, format, readonly = false, size = 535){
-    let textAreaMode;
+    let textAreaMode = format;
     if(format === "json")
         textAreaMode = "ld+json";
-    else
-        textAreaMode = format;
 
     let editor = CodeMirror.fromTextArea(document.getElementById(id), {
         matchBrackets: true,
@@ -277,7 +342,7 @@ function formatXml(xml) {
     return formatted;
 }
 
-function foldEventVoca(format, editor){
+function foldEventVoca(editor, format){
     if(format === 'xml'){
         let strs = editor.getValue().split("\n");
         const re_event = /<([a-zA-Z]+Event)>/;
