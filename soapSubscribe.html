@@ -52,6 +52,22 @@
                 </p>
               </div>
             </div>
+
+            <!-- Toast container -->
+            <div style="position: absolute; top: 1rem; right: 1rem; z-index: 7000;">
+              <!-- Toast -->
+              <div class="toast" id="subResponseToast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="3000">
+                <div class="toast-header">
+                  <i data-feather="bell"></i>
+                  <strong class="mr-auto"></strong>
+                  <button class="ml-5 mb-1 close" type="button" data-dismiss="toast" aria-label="Close">
+                    &times;
+                  </button>
+                </div>
+                <div class="toast-body"></div>
+              </div>
+            </div>
+
           </div>
 
           <div class="row mt-n8 px-5">
@@ -184,14 +200,13 @@
                   </span>
 
                   <div class="ml-auto">
-
-                    <button id="subResultButton" class="btn btn-secondary mr-2 " type="button" data-toggle="modal" data-target="#subResult" onclick="getSubResult();">View Subscription Result</button>
+                    <button id="subResultButton" class="btn btn-secondary mr-2 d-none" type="button" data-toggle="modal" data-target="#subResult" onclick="getSubResult(subId);">View Subscription Result</button>
 
                     <div class="modal fade" id="subResult" role="dialog">
                       <div class="modal-dialog modal-xl">
                           <div class="modal-content">
                               <div class="modal-header">
-                                  <h4>View Subscription Result &nbsp; <i class="fa fa-spinner fa-spin"></i>
+                                  <h4>View Subscription Result &nbsp; <i id="subResultIcon" class="fa fa-spinner"></i>
                                   </h4>
                                   <button type="button" class="close" data-dismiss="modal">&times;</button>
                               </div>
@@ -251,12 +266,14 @@
     <script defer>
         let queryURL = baseURL + "/query";
         
-        var subId;
+        let subId;
+        let socket;
 
         // codemirror
         let editor;
         let editor_resp;
         let editor_subResultResp;
+
 
         $(document).ready(() => {
           editor = initEditor("textArea", 'xml');

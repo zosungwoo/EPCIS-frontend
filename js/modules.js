@@ -109,7 +109,6 @@ function capture(format) {
                         xhr.setRequestHeader("GS1-EPCIS-Max", "2.0.0");
                     }
                 }).done((result) => {
-                    a = result
                     let xmlString = formatXml(new XMLSerializer().serializeToString(result));
                     let running = $(result).find("ns2\\:epcisCaptureJobType").attr("running");
 
@@ -117,7 +116,6 @@ function capture(format) {
                         return;
 
                     cmp = xmlString;
-                    $("#details").val(xmlString);
                     editor_details.setValue(xmlString);
                     $('#detailsModal').on('shown.bs.modal', function() {
                         editor_details.refresh();
@@ -142,7 +140,6 @@ function capture(format) {
         result = formatXml(result.responseText);
         $("#resp").val("Fail with " + result).hide().fadeIn('slow');
         $("#status").removeClass("text-success text-warning text-danger").addClass("text-secondary");
-        $("#details").val(formatXml(result));
         editor_details.setValue(result);
         $('#detailsModal').on('shown.bs.modal', function() {
             editor_details.refresh();
@@ -167,7 +164,7 @@ function singleCapture(format) {
         $("#resp").val(result.responseText).hide().fadeIn('slow');
     });
 }
-var a;
+
 function query(){
     $.ajax({
         type: "POST",
@@ -177,7 +174,6 @@ function query(){
         crossOrigin: true
     }).done((result) => {
         let xmlString = formatXml(new XMLSerializer().serializeToString(result));
-        $("#queryResp").val(xmlString);
         editor_resp.setValue(xmlString);
 
         foldEventVoca(editor_resp, 'xml');
@@ -195,63 +191,71 @@ function query(){
         
     }).fail((result) => {
         result = formatXml(result.responseText);
-        $("#queryResp").val(result);
         editor_resp.setValue(result);
 
         $("#subResultButton").addClass('d-none');
     });
 }
 
-function getSubResult(){
+function getSubResult(subId){
     const clientServerHref = window.location.href.split('/');
     let clientServerHrefArr = href.split("/");
-    let webSocketUrl = "ws://" + hrefArr[2] + "/epcis/sub";
+    let webSocketUrl = "ws://" + hrefArr[2] + "/epcis/sub" + "?subId=" + subId;
 
-    socket = new WebSocket(url);
+    editor_subResultResp.setValue("");
+
+    if(socket) {
+        socket.close();
+        socket = new WebSocket(webSocketUrl);
+    } else {
+        socket = new WebSocket(webSocketUrl);
+    }
         
-////////// 이부분 수정 ///////////////
+    let responseToast = $("#subResponseToast")
+    let responseToastHeader = responseToast.find("strong");
+    let responseToastBody = responseToast.find(".toast-body")
 
-    socket.onopen = function(e) {
-        $("#responseToast").find("strong").html("Connection established");
-        $("#responseToast").find(".toast-body").html("Please wait for the server to send the data.");
-        // responseToast.show();
+    socket.onopen = function(event) {
+        $("#subResultIcon").addClass("fa-spin");
+        responseToastHeader.html("Connection established");
+        responseToastBody.html("Please wait for the server to send the data");
+        responseToast.toast("show");
     };
 
     socket.onmessage = function(event) {
-        $("#responseToast").find("strong").html("Data received from server");
-        $("#responseToast").find(".toast-body").html("Please check the editor");
-        // responseToast.show();
-        // jsonEditor.setValue(event.da1ta);
+        if ($('#subResult').hasClass('show')) {   
+            editor_subResultResp.setValue(formatXml(event.data));
+            
+            responseToastHeader.html("Data received from server");
+            responseToastBody.html("Please check the editor");
+            responseToast.toast("show");
+        }   
     };
 
     socket.onclose = function(event) {
+        $("#subResultIcon").removeClass("fa-spin");
+
         if (event.wasClean) {
-            $("#responseToast").find("strong").html("Connection closed cleanly.");
-            $("#responseToast").find(".toast-body").html(event.reason);
-            // responseToast.show();
+            responseToastHeader.html("Connection closed cleanly.");
+            responseToast.html(event.reason);
+            responseToast.toast("show");
         } else {
-            $("#responseToast").find("strong").html("Connection closed abruptly.");
-            $("#responseToast").find(".toast-body").html("Connection died");
-            // responseToast.show();
+            responseToastHeader.html("Connection closed abruptly.");
+            responseToast.html("Connection died");
+            responseToast.toast("show");
         }
-        
-        $("#pollParam").val("");
-        $("button#subscribe-off-btn").removeClass("btn-info").addClass("btn-outline-info").prop("disabled", true);
-        $("button#subscribe-on-btn").removeClass("btn-outline-info").addClass("btn-info").prop("disabled", false);
     };
 
     socket.onerror = function(error) {
-        $("#errorToast").find("strong").html("An error occured");
-        $("#errorToast").find(".toast-body").html("Please check the editor to see the error message");
-        // errorToast.sho???zaZZZZZZZZZZZZZZZZZZZZZZZZw();
-        // if(typeof event != `undefined`)
-        //     jsonEditor.setValue(event.message);
-        // else
-        //     jsonEditor.setValue("Browser probably cannot establish connection with " + url);
+        $("#subResultIcon").removeClass("fa-spin");
         
-        $("#pollParam").val("");
-        $("button#subscribe-off-btn").removeClass("btn-info").addClass("btn-outline-info").prop("disabled", true);
-        $("button#subscribe-on-btn").removeClass("btn-outline-info").addClass("btn-info").prop("disabled", false);
+        responseToastHeader.html("An error occured");
+        responseToastBody.html("Please check the editor to see the error message");
+        responseToast.toast("show");
+        if(typeof event != `undefined`)
+            editor_subResultResp.setValue(event.message);
+        else
+            editor_subResultResp.setValue("Browser probably cannot establish connection with " + url);
     };
 }
 
