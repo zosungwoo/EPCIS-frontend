@@ -6,7 +6,7 @@ let validationURL;
 let captureURL;
 let queryURL;
 
-// server connection check and show status
+// Server connection check and Show status
 function serverConn(url, subUrl = ""){
     $.ajax({
         url: url,
@@ -20,7 +20,8 @@ function serverConn(url, subUrl = ""){
     });
 }
 
-// reset database resourses
+
+// Reset database resourses
 function resetDB() {
     let responseToast = $("#responseToast");
     let toastText;
@@ -58,6 +59,8 @@ function resetDB() {
     }, 5000);
 }
 
+
+// Validate editor contents
 function isValid(format) {
     $.ajax({
         type: "POST",
@@ -80,8 +83,11 @@ function isValid(format) {
     });
 }
 
+
+// Capture
 function capture(format) {
-    $.ajax({
+    // capture (POST request)
+    $.ajax({  
         type: "POST",
         url: captureURL,
         data: editor.getValue(),
@@ -93,19 +99,20 @@ function capture(format) {
             xhr.setRequestHeader("GS1-EPCIS-Capture-Error-Behaviour", "rollback");
         }
     }).done((data, textStatus, request) => {
-        let loc = request.getResponseHeader('Location')  // get Location header
+        let loc = request.getResponseHeader('Location')  // get 'Location' header
         if(!loc)
         {
             $("#resp").val("Success").hide().fadeIn('slow');
             return;
         }
-        let id = loc.split("/").pop();  // get capture ID from Location header
+        let id = loc.split("/").pop();  // get capture ID from 'Location' header
         $("#resp").val("Success with capture ID: " + id).hide().fadeIn('slow');
         $("#status").removeClass("text-secondary text-success text-danger").addClass("text-warning Blink");
 
         let cmp;  // for comparing the response with the previous response
         setTimeout(() => {
             let interval = setInterval(() => {
+                // capture detail (GET request)
                 $.ajax({
                     url: captureURL + "/" + id,
                     contentType: "application/" + format + "; charset=utf-8",
@@ -123,7 +130,7 @@ function capture(format) {
                         return;
 
                     cmp = xmlString;
-                    // update editor
+                    // update editor contents
                     editor_details.setValue(xmlString);
                     $('#detailsModal').on('shown.bs.modal', function() { 
                         editor_details.refresh();
@@ -148,7 +155,7 @@ function capture(format) {
         result = formatXml(result.responseText);
         $("#resp").val("Fail with " + result).hide().fadeIn('slow');
         $("#status").removeClass("text-success text-warning text-danger").addClass("text-secondary");
-        // update editor
+        // update editor contents
         editor_details.setValue(result);
         $('#detailsModal').on('shown.bs.modal', function() {
             editor_details.refresh();
@@ -156,14 +163,17 @@ function capture(format) {
     });
 }
 
+
+// Single Capture 
 function singleCapture(format) {
+    // single capture (POST request)
     $.ajax({
         type: "POST",
         url: captureURL,
         data: editor.getValue(),
         contentType: "application/" + format + "; charset=utf-8",
         crossOrigin: true,
-        beforeSend: function (xhr) {
+        beforeSend: function (xhr) {  // add required headers
             xhr.setRequestHeader("GS1-EPCIS-Version", "2.0.0");
             xhr.setRequestHeader("GS1-CBV-Version", "2.0.0");
         }
@@ -174,7 +184,10 @@ function singleCapture(format) {
     });
 }
 
+
+// Query
 function query(){
+    // query (POST request)
     $.ajax({
         type: "POST",
         url: queryURL,
@@ -182,9 +195,11 @@ function query(){
         contentType: "application/xml; charset=utf-8",
         crossOrigin: true
     }).done((result) => {
+        // result formatting
         let xmlString = formatXml(new XMLSerializer().serializeToString(result));
+        // update editor contents
         editor_resp.setValue(xmlString);
-
+        // 'fold' editor conetnts
         foldEventVoca(editor_resp, 'xml');
         
         if($(result).find("query\\:SubscribeResult").length){
@@ -199,6 +214,7 @@ function query(){
         }
         
     }).fail((result) => {
+        // result formatting
         result = formatXml(result.responseText);
         editor_resp.setValue(result);
 
@@ -206,20 +222,23 @@ function query(){
     });
 }
 
+// Get subscription result from web client server
 function getSubResult(subId){
-    const clientServerHref = window.location.href.split('/');
+    const clientServerHref = window.location.href;
     let clientServerHrefArr = href.split("/");
     let webSocketUrl = "ws://" + hrefArr[2] + "/epcis/sub" + "?subId=" + subId;
+
+    // clear editor contents
     editor_subResultResp.setValue("");
     $('#subResultModal').on('shown.bs.modal', function() {
         editor_subResultResp.refresh();
     });
 
-
+    // open new websocket
     if(socket)
         socket.close();
     socket = new WebSocket(webSocketUrl);
-        
+    
     let responseToast = $("#subResponseToast")
     let responseToastHeader = responseToast.find("strong");
     let responseToastBody = responseToast.find(".toast-body");
@@ -233,7 +252,9 @@ function getSubResult(subId){
     };
 
     socket.onmessage = function(event) {
+        // only when modal is open
         if ($('#subResultModal').hasClass('show')) {   
+            // update editor contents
             editor_subResultResp.setValue(formatXml(event.data));
             
             responseToastHeader.html("Data received from server");
@@ -271,7 +292,7 @@ function getSubResult(subId){
 
 // Retrieve examples
 function retrieveExamples(retrieveSubURL, exampleMiddleURL, format){
-    let retrieveURL = baseURL.replace(":8080", "") + retrieveSubURL;
+    let retrieveURL = baseURL.replace(":8080", "") + retrieveSubURL;  // from web client server
     $.ajax({
         url: retrieveURL,
         crossOrigin: true
@@ -291,10 +312,11 @@ function retrieveExamples(retrieveSubURL, exampleMiddleURL, format){
     })
 }
 
+// Load examples
 function loadExample(btn, format) {
     $('#textArea').load(btn.id, () => {
-        editor.setValue($('#textArea').val());
-        foldEventVoca(editor, format);
+        editor.setValue($('#textArea').val());  // update editor contents
+        foldEventVoca(editor, format);  // 'fold' editor contents
 
         if(validationURL !== undefined)  // Whether to validate
             isValid(format);
@@ -303,6 +325,7 @@ function loadExample(btn, format) {
     $('#exampleModal').modal('hide');
 }
 
+// Initialize a new editor
 function initEditor(id, format, readonly = false, size = 535){
     let textAreaMode = format;
     if(format === "json")
@@ -323,8 +346,7 @@ function initEditor(id, format, readonly = false, size = 535){
     return editor;
 }
 
-
-
+// Format xml code
 function formatXml(xml) {
     var formatted = '';
     var reg = /(>)(<)(\/*)/g;
@@ -356,7 +378,9 @@ function formatXml(xml) {
     return formatted;
 }
 
+// Add 'folding' on editor
 function foldEventVoca(editor, format){
+    // xml
     if(format === 'xml'){
         let strs = editor.getValue().split("\n");
         const re_event = /<([a-zA-Z]+Event)>/;
@@ -368,6 +392,7 @@ function foldEventVoca(editor, format){
                 editor.foldCode(CodeMirror.Pos(i, 0));
         }
     }
+    // json
     else{
         strs = editor.getValue().split("\n");
 

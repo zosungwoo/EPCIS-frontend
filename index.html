@@ -23,11 +23,20 @@
       <!-- Sidebar -->
       <ul id="sidebar" class="navbar-nav bg-gradient-custom sidebar sidebar-dark accordion" id="accordionSidebar">
       </ul>
-
+      
       <!-- Content Wrapper -->
       <div id="content-wrapper" class="d-flex flex-column">
         <!-- Main Content -->
         <div id="content">
+          <!-- Topbar -->
+          <nav class="navbar navbar-expand navbar-light bg-white topbar static-top shadow d-md-none">
+            <!-- Sidebar Toggle (Topbar) -->
+            <button id="sidebarToggleTop" class="btn btn-link rounded-circle mr-3">
+                <i class="fa fa-bars"></i>
+            </button>
+          </nav>
+          <!-- End of Topbar -->
+          
           <div class="bg-header pt-4 pb-10">
             <div class="pt-4 px-5">
               <h1 class="h1 text-gray-100 font-weight-bold mb-4">
@@ -228,17 +237,7 @@
                               </div>
                               <div id="numOfEvents" class="h2 mb-0 font-weight-bold text-gray-800"> - </div>
                             </div>
-                            <div class="col-lg-2 d-flex flex-column justify-content-end">
-                              <a href="events.html" class="btn btn-secondary btn-circle btn-sm">
-                                <i class="fas fa-arrow-right"></i>
-                              </a>
-                            </div>
                           </div>
-                          
-
-
-
-                          
                         </div>
                       </div>
                     </div>
@@ -349,8 +348,6 @@
                   </div>
                 </div>
               </div>
-
-              
             </div>
           </div>
         </div>
@@ -395,12 +392,6 @@
         url: baseURL + "/statistics",
         crossOrigin: true,
       }).done((result) => {
-        // baseURLs.soapQueryBaseURL = result.soapQueryBase;
-        // baseURLs.soapSubscribeBaseURL = result.soapSubscribeBase;
-        // baseURLs.jsonCaptureBaseURL = result.jsonCaptureBase;
-        // baseURLs.restQueryBaseURL = result.restQueryBase;
-        // baseURLs.restSubscribeBaseURL = result.restSubscribeBase;
-
         $(document).ready(() => {
           $("#numOfEvents").html(result.numOfEvents);
           $("#numOfVocabularies").html(result.numOfVocabularies);
@@ -414,24 +405,6 @@
           // Connection to the server
           serverConn(baseURL);
           setInterval(serverConn, 3000, baseURL);
-
-          // for (const URL in baseURLs) {
-          //   const regex = /(\w+)BaseURL/;
-          //   let divId = URL.match(regex)[1];
-
-          //   $.ajax({
-          //     url: baseURLs[URL][0],
-          //     crossOrigin: true,
-          //   })
-          //     .done(() => {
-          //       $("#" + divId + "Resp").removeClass('bg-danger').addClass("bg-success");
-          //     })
-          //     .always(() => {
-          //       $("#" + divId + "Endpoint").html(
-          //         baseURLs[URL][0] + "/" + baseURLs[URL][1]
-          //       );
-          //     });
-          // }
         });
       });
     </script>

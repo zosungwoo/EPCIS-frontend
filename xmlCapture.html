@@ -40,6 +40,15 @@
       <div id="content-wrapper" class="d-flex flex-column">
         <!-- Main Content -->
         <div id="content">
+          <!-- Topbar -->
+          <nav class="navbar navbar-expand navbar-light bg-white topbar static-top shadow d-md-none">
+            <!-- Sidebar Toggle (Topbar) -->
+            <button id="sidebarToggleTop" class="btn btn-link rounded-circle mr-3">
+                <i class="fa fa-bars"></i>
+            </button>
+          </nav>
+          <!-- End of Topbar -->
+          
           <div class="bg-header pt-4 pb-10">
             <div class="pt-4 px-5">
               <h1 class="h1 text-gray-100 font-weight-bold mb-4">
@@ -62,7 +71,7 @@
                             <i class="fas fa-newspaper"></i>
                             HTTP.POST Body
                         </h6>
-                        <div class="ml-auto">
+                        <div class="ml-auto d-flex flex-column flex-md-row">
                             <button class="btn btn-secondary" type="button" data-toggle="modal" data-target="#instructionsModal">Instructions</button>
 
                             <div class="modal fade" id="instructionsModal" role="dialog">
@@ -254,7 +263,7 @@
         validationURL = baseURL + "/validation";
         captureURL = baseURL + "/capture";
 
-        // codemirror
+        // Codemirror editors
         let editor;
         let editor_details;
         
@@ -269,7 +278,7 @@
 
           // Retrieve examples
           retrieveExamples(retrieveSubURL = "/capture/examples", exampleMiddleURL = "/example/capture", 'xml');
-        });
+        }); 
     </script>
   </body>
 </html>
