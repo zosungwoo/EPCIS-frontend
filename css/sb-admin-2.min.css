@@ -4561,6 +4561,12 @@ a.close.disabled{
 .toast-body{
     padding:.75rem
 }
+.toast-right-top {
+    position: fixed;
+    top: 20px; /* 조정 가능한 값 */
+    right: 20px; /* 조정 가능한 값 */
+    z-index: 1050; /* 기존보다 더 높은 값으로 설정하여 다른 요소 위에 나타나게 함 */
+}
 .modal-open{
     overflow:hidden
 }

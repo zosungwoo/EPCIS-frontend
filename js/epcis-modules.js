@@ -2,6 +2,11 @@ const href = "http://127.0.0.1/epcis/home/index.html"; // 수정
 let hrefArr = href.split("/");
 let baseURL = hrefArr[0] + "//" + hrefArr[2] + ":8080/epcis";
 
+let validationURL;
+let captureURL;
+let queryURL;
+
+// server connection check and show status
 function serverConn(url, subUrl = ""){
     $.ajax({
         url: url,
@@ -15,10 +20,11 @@ function serverConn(url, subUrl = ""){
     });
 }
 
+// reset database resourses
 function resetDB() {
     let responseToast = $("#responseToast");
     let toastText;
-    $("#resetIcon").addClass("fa-spin");
+    $("#resetIcon").addClass("fa-spin");  // icon spins
   
     $.ajax({
         type: "DELETE",
@@ -30,6 +36,7 @@ function resetDB() {
         toastText = result.responseText;
     })
 
+    // show the repository status in 5 seconds (because the server resourses are updated every 5 sec)
     setTimeout(() => {
         responseToast.find(".toast-body").html(toastText);
         responseToast.toast("show");
@@ -47,7 +54,7 @@ function resetDB() {
             $("#dispositions").html(result.dispositions);
             $("#eventTypes").html(result.eventTypes);
         })
-        $("#resetIcon").removeClass("fa-spin");
+        $("#resetIcon").removeClass("fa-spin"); // stop spinning
     }, 5000);
 }
 
@@ -80,23 +87,23 @@ function capture(format) {
         data: editor.getValue(),
         contentType: "application/" + format + "; charset=utf-8",
         crossOrigin: true,
-        beforeSend: function (xhr) {
+        beforeSend: function (xhr) {  // add required headers
             xhr.setRequestHeader("GS1-EPCIS-Version", "2.0.0");
             xhr.setRequestHeader("GS1-CBV-Version", "2.0.0");
             xhr.setRequestHeader("GS1-EPCIS-Capture-Error-Behaviour", "rollback");
         }
     }).done((data, textStatus, request) => {
-        let loc = request.getResponseHeader('Location')
+        let loc = request.getResponseHeader('Location')  // get Location header
         if(!loc)
         {
             $("#resp").val("Success").hide().fadeIn('slow');
             return;
         }
-        let id = loc.split("/").pop();
+        let id = loc.split("/").pop();  // get capture ID from Location header
         $("#resp").val("Success with capture ID: " + id).hide().fadeIn('slow');
         $("#status").removeClass("text-secondary text-success text-danger").addClass("text-warning Blink");
 
-        let cmp;
+        let cmp;  // for comparing the response with the previous response
         setTimeout(() => {
             let interval = setInterval(() => {
                 $.ajax({
@@ -112,12 +119,13 @@ function capture(format) {
                     let xmlString = formatXml(new XMLSerializer().serializeToString(result));
                     let running = $(result).find("ns2\\:epcisCaptureJobType").attr("running");
 
-                    if(xmlString === cmp)  // 같은 응답 내용일 경우 모달창 업데이트 및 성공 여부 검사 건너뜀
+                    if(xmlString === cmp)  // 같은 응답 내용일 경우 모달창 업데이트와 성공 여부 검사 건너뜀
                         return;
 
                     cmp = xmlString;
+                    // update editor
                     editor_details.setValue(xmlString);
-                    $('#detailsModal').on('shown.bs.modal', function() {
+                    $('#detailsModal').on('shown.bs.modal', function() { 
                         editor_details.refresh();
                     });
                     
@@ -128,7 +136,7 @@ function capture(format) {
                         else
                             $("#status").removeClass("text-warning Blink").addClass("text-danger");
                         
-                        clearInterval(interval);
+                        clearInterval(interval);  // stop 'setInterval'
                     }
                 }).fail((result) => {
                     $("#status").removeClass("text-warning Blink").addClass("text-danger");
@@ -140,6 +148,7 @@ function capture(format) {
         result = formatXml(result.responseText);
         $("#resp").val("Fail with " + result).hide().fadeIn('slow');
         $("#status").removeClass("text-success text-warning text-danger").addClass("text-secondary");
+        // update editor
         editor_details.setValue(result);
         $('#detailsModal').on('shown.bs.modal', function() {
             editor_details.refresh();
@@ -201,19 +210,20 @@ function getSubResult(subId){
     const clientServerHref = window.location.href.split('/');
     let clientServerHrefArr = href.split("/");
     let webSocketUrl = "ws://" + hrefArr[2] + "/epcis/sub" + "?subId=" + subId;
-
     editor_subResultResp.setValue("");
+    $('#subResultModal').on('shown.bs.modal', function() {
+        editor_subResultResp.refresh();
+    });
 
-    if(socket) {
+
+    if(socket)
         socket.close();
-        socket = new WebSocket(webSocketUrl);
-    } else {
-        socket = new WebSocket(webSocketUrl);
-    }
+    socket = new WebSocket(webSocketUrl);
         
     let responseToast = $("#subResponseToast")
     let responseToastHeader = responseToast.find("strong");
-    let responseToastBody = responseToast.find(".toast-body")
+    let responseToastBody = responseToast.find(".toast-body");
+    
 
     socket.onopen = function(event) {
         $("#subResultIcon").addClass("fa-spin");
@@ -223,7 +233,7 @@ function getSubResult(subId){
     };
 
     socket.onmessage = function(event) {
-        if ($('#subResult').hasClass('show')) {   
+        if ($('#subResultModal').hasClass('show')) {   
             editor_subResultResp.setValue(formatXml(event.data));
             
             responseToastHeader.html("Data received from server");
@@ -237,11 +247,11 @@ function getSubResult(subId){
 
         if (event.wasClean) {
             responseToastHeader.html("Connection closed cleanly.");
-            responseToast.html(event.reason);
+            responseToastBody.html(event.reason);
             responseToast.toast("show");
         } else {
             responseToastHeader.html("Connection closed abruptly.");
-            responseToast.html("Connection died");
+            responseToastBody.html("Connection died");
             responseToast.toast("show");
         }
     };
@@ -286,7 +296,7 @@ function loadExample(btn, format) {
         editor.setValue($('#textArea').val());
         foldEventVoca(editor, format);
 
-        if(typeof validationURL !== 'undefined')  // Whether to validate
+        if(validationURL !== undefined)  // Whether to validate
             isValid(format);
     });
 

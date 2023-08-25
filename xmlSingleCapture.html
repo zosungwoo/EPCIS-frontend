@@ -225,7 +225,7 @@
         $("#footer").load("footer.html");
     </script> 
     
-    <script src="js/modules.js"></script>
+    <script src="js/epcis-modules.js"></script>
     <script defer>
         validationURL = baseURL + "/validation";
         captureURL = baseURL + "/events";
@@ -235,11 +235,12 @@
         let editor_details;
 
         $(document).ready(() => {
+          // Init editors
           editor = initEditor("textArea", 'xml');
 
           // Connection to the server
           serverConn(baseURL, "/events");
-          setInterval(serverConn, 2000, baseURL, "/events");
+          setInterval(serverConn, 3000, baseURL, "/events");
 
           // Retrieve examples
           retrieveExamples(retrieveSubURL = "/xmlsinglecapture/examples", exampleMiddleURL = "/example/capture-xml-single", 'xml');

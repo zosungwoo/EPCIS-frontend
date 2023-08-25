@@ -223,21 +223,22 @@
     </script> 
 
     
-    <script src="js/modules.js"></script>
-    <script defer>
-        let queryURL = baseURL + "/query";
+    <script src="js/epcis-modules.js"></script>
+    <script>
+        queryURL = baseURL + "/query";
 
         // codemirror
         let editor;
         let editor_resp;
 
         $(document).ready(() => {
+          // Init editors
           editor = initEditor("textArea", 'xml');
           editor_resp = initEditor("queryResp", 'xml', readonly=true, size=377);
 
           // Connection to the server
           serverConn(baseURL, "/query");
-          setInterval(serverConn, 2000, baseURL, "/query");
+          setInterval(serverConn, 3000, baseURL, "/query");
 
           // Retrieve examples
           retrieveExamples(retrieveSubURL = "/query/examples", exampleMiddleURL = "/example/query", 'xml', false);

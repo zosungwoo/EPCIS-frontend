@@ -44,7 +44,7 @@
             <!-- Toast container -->
             <div style="position: absolute; top: 1rem; right: 1rem;">
               <!-- Toast -->
-              <div class="toast" id="responseToast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="3000">
+              <div class="toast toast-right-top" id="responseToast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="3000">
                 <div class="toast-header">
                   <i data-feather="bell"></i>
                   <strong class="mr-auto">Reset Response</strong>
@@ -388,7 +388,7 @@
         $("#footer").load("footer.html");
     </script> 
     
-    <script src="js/modules.js"></script>
+    <script src="js/epcis-modules.js"></script>
     <script defer>
       // Connection to the server
       $.ajax({
@@ -413,7 +413,7 @@
 
           // Connection to the server
           serverConn(baseURL);
-          setInterval(serverConn, 2000, baseURL);
+          setInterval(serverConn, 3000, baseURL);
 
           // for (const URL in baseURLs) {
           //   const regex = /(\w+)BaseURL/;

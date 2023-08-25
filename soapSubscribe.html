@@ -56,7 +56,7 @@
             <!-- Toast container -->
             <div style="position: absolute; top: 1rem; right: 1rem; z-index: 7000;">
               <!-- Toast -->
-              <div class="toast" id="subResponseToast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="3000">
+              <div class="toast toast-right-top" id="subResponseToast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="3000">
                 <div class="toast-header">
                   <i data-feather="bell"></i>
                   <strong class="mr-auto"></strong>
@@ -200,9 +200,9 @@
                   </span>
 
                   <div class="ml-auto">
-                    <button id="subResultButton" class="btn btn-secondary mr-2 d-none" type="button" data-toggle="modal" data-target="#subResult" onclick="getSubResult(subId);">View Subscription Result</button>
+                    <button id="subResultButton" class="btn btn-secondary mr-2 d-none" type="button" data-toggle="modal" data-target="#subResultModal" onclick="getSubResult(subId);">View Subscription Result</button>
 
-                    <div class="modal fade" id="subResult" role="dialog">
+                    <div class="modal fade" id="subResultModal" role="dialog">
                       <div class="modal-dialog modal-xl">
                           <div class="modal-content">
                               <div class="modal-header">
@@ -262,12 +262,12 @@
     </script> 
 
     
-    <script src="js/modules.js"></script>
+    <script src="js/epcis-modules.js"></script>
     <script defer>
-        let queryURL = baseURL + "/query";
+        queryURL = baseURL + "/query";
         
-        let subId;
-        let socket;
+        let subId;  // subscription ID
+        let socket;  // for web socket
 
         // codemirror
         let editor;
@@ -276,13 +276,14 @@
 
 
         $(document).ready(() => {
+          // Init editors
           editor = initEditor("textArea", 'xml');
           editor_resp = initEditor("queryResp", 'xml', readonly=true, size=377);
           editor_subResultResp = initEditor("subResultResp", 'xml');
 
           // Connection to the server
           serverConn(baseURL, "/query");
-          setInterval(serverConn, 2000, baseURL, "/query");
+          setInterval(serverConn, 3000, baseURL, "/query");
 
           // Retrieve examples
           retrieveExamples(retrieveSubURL = "/subscribe/examples", exampleMiddleURL = "/example/subscribe", 'xml');
