@@ -36,7 +36,7 @@
             </button>
           </nav>
           <!-- End of Topbar -->
-          
+
           <div class="bg-header pt-4 pb-10">
             <div class="pt-4 px-5">
               <h1 class="h1 text-gray-100 font-weight-bold mb-4">
@@ -230,8 +230,8 @@
                     <div class="col">
                       <div class="card border-left-primary shadow h-100 py-2">
                         <div class="card-body">
-                          <div class="row no-gutters">
-                            <div class="col-lg-10 align-items-center">
+                          <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
                               <div class="text-m font-weight-bold text-primary text-uppercase mb-1">
                                 Event
                               </div>
@@ -372,16 +372,7 @@
 
     <!-- Load Sidebar & Footer -->
     <script type="text/javascript">
-        $("#sidebar").load("sidebar.html", () => {
-            $("#sidebarToggle").click(function(e) {
-                e.preventDefault();
-                $("body").toggleClass("sidebar-toggled");
-                $(".sidebar").toggleClass("toggled");
-                if ($(".sidebar").hasClass("toggled")) {
-                    $(".sidebar .collapse").collapse("hide");
-                }
-            });
-        });
+        $("#sidebar").load("sidebar.html");
         $("#footer").load("footer.html");
     </script> 
     

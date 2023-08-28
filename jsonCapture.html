@@ -161,7 +161,7 @@
                     <div class="d-flex align-items-center">
                       <i class="fa fa-building fa-lg mr-4"></i>
                       <div class="ms-4">
-                        <div>JSON Capture Server</div>
+                        <div>Main Server</div>
                         <div id="serverEndpoint" class="text-xs text-muted"></div>
                       </div>
                     </div>
@@ -244,17 +244,7 @@
 
     <!-- Load Sidebar & Footer -->
     <script type="text/javascript">
-        $("#sidebar").load("sidebar.html", () => {
-            $("#sidebarToggle").click(function(e) {
-                e.preventDefault();
-                $("body").toggleClass("sidebar-toggled");
-                $(".sidebar").toggleClass("toggled");
-                if ($(".sidebar").hasClass("toggled")) {
-                    $(".sidebar .collapse").collapse("hide");
-                }
-            });
-            $("#jsonCaptureItem").addClass("active");
-        });
+        $("#sidebar").load("sidebar.html");
         $("#footer").load("footer.html");
     </script> 
     
@@ -273,8 +263,8 @@
           editor_details = initEditor("details", 'xml', readonly=true);
 
           // Connection to the server
-          serverConn(baseURL, "/capture");
-          setInterval(serverConn, 3000, baseURL, "/capture");
+          serverConn(baseURL);
+          setInterval(serverConn, 3000, baseURL);
 
           // Retrieve examples
           retrieveExamples(retrieveSubURL = "/jsoncapture/examples", exampleMiddleURL = "/example/capture-json", 'json');
