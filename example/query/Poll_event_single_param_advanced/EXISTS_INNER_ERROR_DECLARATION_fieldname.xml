@@ -1,0 +1,17 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+                  xmlns:query="urn:epcglobal:epcis-query:xsd:1" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <soapenv:Header/>
+    <soapenv:Body>
+        <query:Poll>
+            <queryName>SimpleEventQuery</queryName>
+            <params>
+                <param>
+                    <name>EXISTS_INNER_ERROR_DECLARATION_http://ext.com/ext2#string</name>
+                    <value xsi:type="query:VoidHolder"/>
+                </param>
+            </params>
+        </query:Poll>
+    </soapenv:Body>
+</soapenv:Envelope>
+

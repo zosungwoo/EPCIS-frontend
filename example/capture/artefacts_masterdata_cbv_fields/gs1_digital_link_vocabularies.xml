@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE project>
+<epcis:EPCISDocument xmlns:epcis="urn:epcglobal:epcis:xsd:2"
+                     xmlns:p="http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader"
+                     xmlns:cbvmda="urn:epcglobal:cbv:mda"
+                     creationDate="2005-07-11T11:30:47.0Z" schemaVersion="2.0">
+    <EPCISHeader>
+        <extension>
+            <EPCISMasterData>
+                <VocabularyList>
+                    <Vocabulary type="urn:epcglobal:epcis:vtype:ReadPoint">
+                        <VocabularyElementList>
+                            <VocabularyElement id="urn:epc:id:sgln:0614141.12345.0">
+                                <attribute id="urn:epcglobal:cbv:mda:site">0037000007294</attribute>
+                            </VocabularyElement>
+                        </VocabularyElementList>
+                    </Vocabulary>
+                    <Vocabulary type="urn:epcglobal:epcis:vtype:BusinessLocation">
+                        <VocabularyElementList>
+                            <VocabularyElement id="urn:epc:id:sgln:0614141.12345.0">
+                                <attribute id="urn:epcglobal:cbv:mda:site">0037000007295</attribute>
+                            </VocabularyElement>
+                        </VocabularyElementList>
+                    </Vocabulary>
+                    <Vocabulary type="urn:epcglobal:epcis:vtype:SourceDest">
+                        <VocabularyElementList>
+                            <VocabularyElement id="urn:epc:id:sgln:0614141.12345.0">
+                                <attribute id="urn:epcglobal:cbv:mda:site">0037000007296</attribute>
+                            </VocabularyElement>
+                        </VocabularyElementList>
+                    </Vocabulary>
+                    <Vocabulary type="urn:epcglobal:epcis:vtype:Location">
+                        <VocabularyElementList>
+                            <VocabularyElement id="urn:epc:id:sgln:0614141.12345.0">
+                                <attribute id="urn:epcglobal:cbv:mda:site">0037000007297</attribute>
+                            </VocabularyElement>
+                        </VocabularyElementList>
+                    </Vocabulary>
+                    <Vocabulary type="urn:epcglobal:epcis:vtype:Party">
+                        <VocabularyElementList>
+                            <VocabularyElement id="urn:epc:id:pgln:0614141.12345">
+                                <attribute id="urn:epcglobal:cbv:mda:site">0037000007297</attribute>
+                            </VocabularyElement>
+                        </VocabularyElementList>
+                    </Vocabulary>
+                    <Vocabulary type="urn:epcglobal:epcis:vtype:ReadPoint">
+                        <VocabularyElementList>
+                            <VocabularyElement id="urn:epc:id:sgln:0614141.12345.1">
+                                <attribute id="urn:epcglobal:cbv:mda:site">0037000007298</attribute>
+                            </VocabularyElement>
+                        </VocabularyElementList>
+                    </Vocabulary>
+                    <Vocabulary type="urn:epcglobal:epcis:vtype:BusinessLocation">
+                        <VocabularyElementList>
+                            <VocabularyElement id="urn:epc:id:sgln:0614141.12345.1">
+                                <attribute id="urn:epcglobal:cbv:mda:site">0037000007299</attribute>
+                            </VocabularyElement>
+                        </VocabularyElementList>
+                    </Vocabulary>
+                    <Vocabulary type="urn:epcglobal:epcis:vtype:SourceDest">
+                        <VocabularyElementList>
+                            <VocabularyElement id="urn:epc:id:sgln:0614141.12345.1">
+                                <attribute id="urn:epcglobal:cbv:mda:site">0037000007300</attribute>
+                            </VocabularyElement>
+                        </VocabularyElementList>
+                    </Vocabulary>
+                    <Vocabulary type="urn:epcglobal:epcis:vtype:Location">
+                        <VocabularyElementList>
+                            <VocabularyElement id="urn:epc:id:sgln:0614141.12345.1">
+                                <attribute id="urn:epcglobal:cbv:mda:site">0037000007301</attribute>
+                            </VocabularyElement>
+                        </VocabularyElementList>
+                    </Vocabulary>
+                    <Vocabulary type="urn:epcglobal:epcis:vtype:EPCClass">
+                        <VocabularyElementList>
+                            <VocabularyElement id="urn:epc:idpat:sgtin:0614141.712345.*">
+                                <attribute id="urn:epcglobal:cbv:mda:site">0037000007302</attribute>
+                            </VocabularyElement>
+                            <VocabularyElement id="urn:epc:class:lgtin:0614141.712345.ABC123">
+                                <attribute id="urn:epcglobal:cbv:mda:site">0037000007303</attribute>
+                            </VocabularyElement>
+                        </VocabularyElementList>
+                    </Vocabulary>
+                     <Vocabulary type="urn:epcglobal:epcis:vtype:BusinessTransaction">
+                        <VocabularyElementList>
+                            <VocabularyElement id="urn:epc:id:gdti:0614141.12345.006847">
+                                <attribute id="urn:epcglobal:cbv:mda:site">0037000007304</attribute>
+                            </VocabularyElement>
+                        </VocabularyElementList>
+                    </Vocabulary>
+                </VocabularyList>
+            </EPCISMasterData>
+        </extension>
+    </EPCISHeader>
+    <EPCISBody>
+        <EventList>
+        </EventList>
+    </EPCISBody>
+</epcis:EPCISDocument>

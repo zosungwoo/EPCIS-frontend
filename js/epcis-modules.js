@@ -1,4 +1,4 @@
-const href = "http://127.0.0.1/epcis/home/index.html"; // 수정
+const href = window.location.href;
 let hrefArr = href.split("/");
 let baseURL = hrefArr[0] + "//" + hrefArr[2] + ":8080/epcis";
 
@@ -7,13 +7,13 @@ let captureURL;
 let queryURL;
 
 // Server connection check and Show status
-function serverConn(url, subUrl = ""){
+function serverConn(url){
     $.ajax({
         url: url,
         crossOrigin: true,
     }).done(() => {
         $("#serverResp").removeClass('bg-danger').addClass("bg-success");
-        $("#serverEndpoint").html(url + subUrl);
+        $("#serverEndpoint").html(url);
     }).fail(() => {
         $("#serverResp").removeClass('bg-success').addClass("bg-danger");
         $("#serverEndpoint").html("");
@@ -126,7 +126,7 @@ function capture(format) {
                     let xmlString = formatXml(new XMLSerializer().serializeToString(result));
                     let running = $(result).find("ns2\\:epcisCaptureJobType").attr("running");
 
-                    if(xmlString === cmp)  // 같은 응답 내용일 경우 모달창 업데이트와 성공 여부 검사 건너뜀
+                    if(xmlString === cmp)  // 같은 응답 내용일 경우, 모달창 업데이트 및 성공 여부 검사 건너뜀
                         return;
 
                     cmp = xmlString;
@@ -209,7 +209,6 @@ function query(){
 
             $("#subResultButton").removeClass('d-none');
         } else{
-            // 변수 기본값으로 초기화
             $("#subResultButton").addClass('d-none');
         }
         
@@ -243,7 +242,6 @@ function getSubResult(subId){
     let responseToastHeader = responseToast.find("strong");
     let responseToastBody = responseToast.find(".toast-body");
     
-
     socket.onopen = function(event) {
         $("#subResultIcon").addClass("fa-spin");
         responseToastHeader.html("Connection established");
@@ -378,7 +376,7 @@ function formatXml(xml) {
     return formatted;
 }
 
-// Add 'folding' on editor
+// Apply 'folding' to editor
 function foldEventVoca(editor, format){
     // xml
     if(format === 'xml'){

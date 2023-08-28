@@ -1,0 +1,16 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+                  xmlns:query="urn:epcglobal:epcis-query:xsd:1" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <soapenv:Header/>
+    <soapenv:Body>
+        <query:Poll>
+            <queryName>SimpleEventQuery</queryName>
+            <params>
+                <param>
+                    <name>EQ_SENSORMETADATA_http://ext.com/ext1#someFurtherMetaData</name>
+                    <value xsi:type="xsd:string">someText</value>
+                </param>
+            </params>
+        </query:Poll>
+    </soapenv:Body>
+</soapenv:Envelope>

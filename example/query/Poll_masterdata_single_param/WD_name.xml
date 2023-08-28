@@ -1,0 +1,27 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                  xmlns:query="urn:epcglobal:epcis-query:xsd:1">
+    <soapenv:Header/>
+    <soapenv:Body>
+        <query:Poll>
+            <queryName>SimpleMasterDataQuery</queryName>
+            <params>
+                <param>
+                    <name>WD_name</name>
+                    <value xsi:type="query:ArrayOfString">
+                        <string>urn:epc:id:sgln:0037000.00729.0</string>
+                    </value>
+                </param>
+                <!-- includeAttributes and includeChidren are mandatory parameters -->
+                <param>
+                    <name>includeAttributes</name>
+                    <value xsi:type="xsd:boolean">true</value>
+                </param>
+                <param>
+                    <name>includeChildren</name>
+                    <value xsi:type="xsd:boolean">true</value>
+                </param>
+            </params>
+        </query:Poll>
+    </soapenv:Body>
+</soapenv:Envelope>
