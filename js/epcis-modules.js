@@ -225,7 +225,7 @@ function query(){
 function getSubResult(subId){
     const clientServerHref = window.location.href;
     let clientServerHrefArr = href.split("/");
-    let webSocketUrl = "ws://" + hrefArr[2] + "/epcis/sub" + "?subId=" + subId;
+    let webSocketUrl = "ws://" + hrefArr[2] + "/epcis/subSocket" + "?subId=" + subId;
 
     // clear editor contents
     editor_subResultResp.setValue("");
