@@ -220,7 +220,17 @@
 
     <!-- Load Sidebar & Footer -->
     <script type="text/javascript">
-        $("#sidebar").load("sidebar.html");
+        $("#sidebar").load("sidebar.html", () => { 
+            $("#sidebarToggle").click(function(e) {
+                e.preventDefault();
+                $("body").toggleClass("sidebar-toggled");
+                $(".sidebar").toggleClass("toggled");
+                if ($(".sidebar").hasClass("toggled")) {
+                    $(".sidebar .collapse").collapse("hide");
+                }
+            });
+            $("#xmlSingleCaptureItem").addClass("active"); 
+        });
         $("#footer").load("footer.html");
     </script> 
     

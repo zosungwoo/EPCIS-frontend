@@ -256,8 +256,18 @@
 
     <!-- Load Sidebar & Footer -->
     <script type="text/javascript">
-        $("#sidebar").load("sidebar.html");
-        $("#footer").load("footer.html");
+      $("#sidebar").load("sidebar.html", () => { 
+          $("#sidebarToggle").click(function(e) {
+              e.preventDefault();
+              $("body").toggleClass("sidebar-toggled");
+              $(".sidebar").toggleClass("toggled");
+              if ($(".sidebar").hasClass("toggled")) {
+                  $(".sidebar .collapse").collapse("hide");
+              }
+          });
+          $("#soapSubscribeItem").addClass("active"); 
+      });
+      $("#footer").load("footer.html");
     </script> 
 
     
