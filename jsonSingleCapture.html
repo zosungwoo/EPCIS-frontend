@@ -7,7 +7,7 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
 
-    <title>Oliot EPCIS - JSON Capture</title>
+    <title>Oliot EPCIS - JSON Capture (Single)</title>
 
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css" />
@@ -53,12 +53,12 @@
           <div class="bg-header pt-4 pb-10">
             <div class="pt-4 px-5">
               <h1 class="h1 text-gray-100 font-weight-bold mb-4">
-                JSON Capture Client
+                JSON Capture Client (Single)
               </h1>
 
               <div class="text-gray-100">
                 <p>
-                  This page enables you to learn and use EPCIS capture interface.
+                    This page enables you to learn and use EPCIS capture interface.
                 </p>
               </div>
             </div>
@@ -94,16 +94,17 @@
                                                     <tr class="odd">
                                                       <td class="font-weight-bold h5">Capture</td>
                                                       <td>
-                                                        This service allows you to store your EPCIS Document in a JSON format into your backend storage <br>
-                                                        <b>Method</b>: POST <br>
-                                                        <b>Contents</b>: application/json, complying with <a href="./schema/EPCIS-JSON-Schema.json">EPCIS v2.0 JSON Schema</a> <br> <br>
-                                                        How to use: <br>
-                                                        <ul>
+                                                        This service allows you to capture your 'single' event inside EPCIS Document into your backend storage <br>
+                                                          <em>Note: use /vocabularyCapture for epcis:EPCISMasterDataDocument</em> <br> <br>
+                                                          <b>Method</b>: POST <br>
+                                                          <b>Contents</b>: application/json, complying with <a href="./schema/EPCIS-JSON-Schema.json">EPCIS v2.0 JSON Schema</a> <br> <br>
+                                                          How to use: <br>
+                                                          <ul>
                                                             <li>Load an example in a dropdown menu or Copy/paste your own EPCIS document into a textbox</li>
                                                             <li>See the validation result against EPCISDocument schema</li>
                                                             <li>You can even capture the valid document by clicking a capture button</li>
-                                                        </ul>
-                                                    </td>
+                                                          </ul>
+                                                      </td>
                                                     </tr>
                                                   </tbody>
                                               </table>
@@ -188,35 +189,11 @@
                     <span class="m-0 font-weight-bold text-custom text-lg">
                       Document Capture
                     </span>
-                    <button type="button" class="btn btn-info ml-auto" onclick="capture('json')">Capture</button>
+                    <button type="button" class="btn btn-info ml-auto" onclick="singleCapture('json')">Capture</button>
                 </div>
-                <div class="card-body text-gray-800 align-items-center d-flex pr-sm-0">
-                    <div class="col-lg-9 mr-2">
+                <div class="card-body text-gray-800">
+                    <div class="col">
                         <input id="resp" type="text" class="form-control" disabled placeholder="Response of Capture">
-                    </div>
-                    <div class="col-lg-3">
-                        <i class="fas fa-ellipsis-h text-secondary"></i> &nbsp;
-                        <i id="status" class="fa fa-circle text-secondary fa-lg animated--fade-in"></i>
-
-                        
-                        <button class="btn btn-secondary btn-circle btn-xs mt-nc p-0" type="button" data-toggle="modal" data-target="#detailsModal">
-                          <i class="fas fa-info-circle fa-lg"></i>
-                        </button>
-  
-                        <div class="modal fade" id="detailsModal" role="dialog">
-                            <div class="modal-dialog modal-xl">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h4>View Details</h4>
-                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                    </div>
-                                    <div class="modal-body">
-                                      <textarea id="details" class="form-control auto-text-area"></textarea>
-                                      
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
               </div>
@@ -244,24 +221,24 @@
 
     <!-- Load Sidebar & Footer -->
     <script type="text/javascript">
-      $("#sidebar").load("sidebar.html", () => { 
-          $("#sidebarToggle").click(function(e) {
-              e.preventDefault();
-              $("body").toggleClass("sidebar-toggled");
-              $(".sidebar").toggleClass("toggled");
-              if ($(".sidebar").hasClass("toggled")) {
-                  $(".sidebar .collapse").collapse("hide");
-              }
-          });
-          $("#jsonCaptureItem").addClass("active"); 
-      });
-      $("#footer").load("footer.html");
+        $("#sidebar").load("sidebar.html", () => { 
+            $("#sidebarToggle").click(function(e) {
+                e.preventDefault();
+                $("body").toggleClass("sidebar-toggled");
+                $(".sidebar").toggleClass("toggled");
+                if ($(".sidebar").hasClass("toggled")) {
+                    $(".sidebar .collapse").collapse("hide");
+                }
+            });
+            $("#jsonSingleCaptureItem").addClass("active"); 
+        });
+        $("#footer").load("footer.html");
     </script> 
     
     <script src="js/epcis-modules.js"></script>
-    <script>
+    <script defer>
         validationURL = baseURL + "/validation";
-        captureURL = baseURL + "/capture";
+        captureURL = baseURL + "/events";
 
         // Codemirror editors
         let editor;
@@ -270,14 +247,13 @@
         $(document).ready(() => {
           // Init editors
           editor = initEditor("textArea", 'json');
-          editor_details = initEditor("details", 'xml', readonly=true);
 
           // Connection to the server
           serverConn(baseURL);
           setInterval(serverConn, 3000, baseURL);
 
           // Retrieve examples
-          retrieveExamples(retrieveSubURL = "/jsoncapture/examples", exampleMiddleURL = "/example/capture-json", 'json');
+          retrieveExamples(retrieveSubURL = "/jsonsinglecapture/examples", exampleMiddleURL = "/example/capture-json-single", 'json');
         });
     </script>
   </body>

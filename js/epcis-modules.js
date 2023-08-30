@@ -391,8 +391,8 @@ function foldEventVoca(editor, format){
         }
     }
     // json
-    else{
-        strs = editor.getValue().split("\n");
+    else if(format === 'json'){
+        let strs = editor.getValue().split("\n");
 
         // Fold events and vocabularies
         for(let i=0;i<strs.length;i++){
@@ -400,4 +400,5 @@ function foldEventVoca(editor, format){
                 editor.foldCode(CodeMirror.Pos(i, 0));
         }
     }
+    else{ }
 }
